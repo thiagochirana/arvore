@@ -22,6 +22,8 @@ public class ArvoresService {
 
     private Dados dados = new Dados();
 
+    private Busca busca = new Busca();
+
     private ControleArvores arvoreControl;
 
     @Autowired
@@ -72,7 +74,7 @@ public class ArvoresService {
     }
 
     public ResponseEntity buscarNode(String textoDoNode){
-        Node no = Busca.binariaDaArvore(arvoreControl.getArvore(),textoDoNode);
+        Node no = busca.binariaDaArvore(arvoreControl.getArvore(),textoDoNode);
         if (no != null){
             return ResponseEntity.ok(no.getDTO());
         } else {
@@ -93,13 +95,19 @@ public class ArvoresService {
     }
 
     private Arvore salvarArvore(Arvore arvore){
+        LOG.info("SAVING ARVORE | Salvar nova arvore...");
         arvore.setRoot(salvarNodes(arvore.getRoot()));
-        return arvores.save(arvore);
+        Arvore arv = arvores.save(arvore);
+        LOG.info("SAVE | Realizado com sucesso!");
+        return arv;
     }
 
     private Arvore updateArvore(Arvore arvore){
+        LOG.info("UPDATING ARVORE| Realizando update da arvore...");
         Arvore find = arvores.findById(arvore.getId()).get();
-        return arvores.save(find);
+        Arvore arv = arvores.save(find);
+        LOG.info("UPDATE | Realizado com sucesso!");
+        return arv;
     }
 
     private Node salvarNodes(Node no){
@@ -109,6 +117,9 @@ public class ArvoresService {
         if (no.contemNoDireito()){
             salvarNodes(no.getNoDireito());
         }
-        return nodes.save(no);
+        LOG.info("SALVING NODE | Salvando...");
+        Node no1 = nodes.save(no);
+        LOG.info("SALVO | "+no1+" salvo com sucesso.");
+        return no1;
     }
 }

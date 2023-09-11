@@ -9,12 +9,14 @@ import org.slf4j.LoggerFactory;
 public class ControleArvores {
 
     private static Logger LOG = LoggerFactory.getLogger(ControleArvores.class);
+    private Busca busca;
 
     private Arvore arvore;
 
     public ControleArvores(Arvore arvore){
         this.arvore = arvore;
         this.arvore.adicionarNaListaDePalavras(arvore.getRoot().getTexto());
+        this.busca = new Busca();
     }
 
     public Arvore getArvore(){
@@ -28,7 +30,7 @@ public class ControleArvores {
         } else {
             //Aqui realiza a busca na árvore se tal node já está presente na árvore, se sim apenas acrescenta na contagem de palavras, se não então insere na árvore
             LOG.info("Vou iniciar uma Busca Binária na "+arvore.toString()+" e verificar se contém o Node "+node.getTexto().toUpperCase());
-            Node no = Busca.binariaDaArvore(this.arvore,node.getTexto());
+            Node no = busca.binariaDaArvore(arvore,node.getTexto());
             if(no != null){
                 LOG.info("Node com texto "+node.getTexto().toUpperCase()+" foi encontrado na árvore, logo, não irei preencher, apenas adicionar a contagem de palavras");
                 arvore.adicionarNaListaDePalavras(node.getTexto());
@@ -46,8 +48,10 @@ public class ControleArvores {
 
         if (raiz == null){
             raiz = novoNode;
-            LOG.info("Raiz "+raiz+" vazia, vou adicionar o node de texto ->"+novoNode.getTexto().toUpperCase());
-            return adicionarNode(raiz, novoNode, DirecaoNode.NODE_ATUAL);
+            LOG.info("Raiz "+raiz+" vazia, vou adicionar o node "+novoNode.getTexto().toUpperCase());
+            Node n1 = adicionarNode(raiz, novoNode, DirecaoNode.NODE_ATUAL);
+            if (arvore.isAVL()) verificarBalanceamentoArvore();
+            return n1;
         }
         int res = raiz.getTexto()
                 .trim()
@@ -63,7 +67,9 @@ public class ControleArvores {
                 novoNode.adicionarNivel();
                 return preencherArvore(raiz.getNoEsquerdo(),novoNode);
             } else {
-                return adicionarNode(raiz,novoNode,DirecaoNode.ESQUERDA);
+                Node n1 = adicionarNode(raiz,novoNode,DirecaoNode.ESQUERDA);
+                if (arvore.isAVL()) verificarBalanceamentoArvore();
+                return n1;
             }
         } else {
             LOG.info("Node central "+raizPalavra+" é menor que o node "+ nodePalavra+", vou inserir node "+nodePalavra+" na Direita do "+raizPalavra);
@@ -71,7 +77,9 @@ public class ControleArvores {
                 novoNode.adicionarNivel();
                 return preencherArvore(raiz.getNoDireito(),novoNode);
             } else {
-                return adicionarNode(raiz,novoNode,DirecaoNode.DIREITA);
+                Node n1 = adicionarNode(raiz,novoNode,DirecaoNode.DIREITA);
+                if (arvore.isAVL()) verificarBalanceamentoArvore();
+                return n1;
             }
         }
     }
@@ -90,14 +98,12 @@ public class ControleArvores {
         }
         novoNode.adicionarNivel();
         arvore.adicionarNaListaDePalavras(novoNode.getTexto());
-        if (arvore.isAVL()){
-            int v = validarDesbalanceamento(arvore.getRoot());
-            if ((v > 1) || (v < -1)){
-                LOG.info("Arvore desbalanceou, vou iniciar um Rebalanceamento.");
-                rebalance(arvore.getRoot());
-            }
-        }
         return novoNode;
+    }
+
+    public void verificarBalanceamentoArvore(){
+        LOG.info("Irei verificar se árvore está desbalanceada, e se sim, rebalancear.");
+        rebalance(arvore.getRoot());
     }
 
     /**
@@ -106,63 +112,56 @@ public class ControleArvores {
 
     //Rotacoes
     private Node rotacaoSimplesDireita(Node node){
-        LOG.info("Rotacao Simples para a direita iniciada no node "+node.toString());
+        LOG.info("ROTACAO DIREITA | iniciada no node "+node.toString());
         Node n2 = node.getNoEsquerdo();
 
         if (n2.contemNoEsquerdo()){
             n2.setNodeDireito(node);
+            n2.setNodeEsquerdo(null);
         } else {
             Node nAux = n2;
             n2 = n2.getNoDireito();
             n2.setNodeEsquerdo(nAux);
             n2.setNodeDireito(node);
         }
+        LOG.info("ROTACAO DIREITA | Agora o "+n2+" está no centro e terá na esquerda o "+n2.getNoEsquerdo()+" e na direita "+n2.getNoDireito());
         return n2;
     }
 
     private Node rotacaoSimplesEsquerda(Node node){
-        LOG.info("Rotacao Simples para a esquerda iniciada no node "+node.toString());
+        LOG.info("ROTACAO ESQUERDA | iniciada no node "+node.toString());
         Node n2 = node.getNoDireito();
 
         if (n2.contemNoDireito()){
             n2.setNodeEsquerdo(node);
+            node.setNodeDireito(null);
         } else if (n2.contemNoEsquerdo()) {
             Node nAux = n2;
             n2 = n2.getNoEsquerdo();
             n2.setNodeDireito(nAux);
             n2.setNodeEsquerdo(node);
         }
+        LOG.info("ROTACAO ESQUERDA | Agora o "+n2+" está no centro e terá na esquerda o "+n2.getNoEsquerdo()+" e na direita "+n2.getNoDireito());
         return n2;
     }
 
     private void rebalance(Node node){
-        int fator = validarDesbalanceamento(node);
-        if (fator > 1){
-            rotacaoSimplesEsquerda(node);
-        } else if (fator < -1){
-            rotacaoSimplesDireita(node);
+        Node noDesbalanceado = busca.buscarNodeDesbalanceado(node);
+        int balanc = obterBalanceamento(noDesbalanceado);
+        Node noBalanceado;
+        if (balanc < -2){
+            noBalanceado = rotacaoSimplesDireita(noDesbalanceado);
+        } else {
+            noBalanceado = rotacaoSimplesEsquerda(noDesbalanceado);
         }
-    }
-
-    private void updateAltura(Node node){
-        node.setAltura(Busca.obterAlturaDoNode(arvore,node));
+        noDesbalanceado = noBalanceado;
     }
 
     private int obterBalanceamento(Node node){
-        return (node == null) ? 0: Math.max(altura(node.getNoEsquerdo()) , altura(node.getNoDireito()));
-    }
-
-    private int validarDesbalanceamento(Node node){
-        int esq = 0;
-        int dir = 0;
-
-        esq += Busca.obterNiveis(node.getNoEsquerdo())+1;
-        dir += Busca.obterNiveis(node.getNoDireito())+1;
-
-        return dir - esq;
+        return (node == null) ? 0: altura(node.getNoDireito()) - altura(node.getNoEsquerdo());
     }
 
     private int altura(Node node){
-        return (node == null) ? -1 : Busca.obterAlturaDoNode(arvore,node);
+        return (node == null) ? 0 : busca.obterAlturaDoNode(arvore,node);
     }
 }
