@@ -49,11 +49,16 @@ public class ArvoresService {
     }
 
     public ResponseEntity obterTXTEMontarArvoreAVL(MultipartFile arquivo) throws IOException {
-        Arvore arv = null;
         for (String palavraNode : dados.carregarListaDePalavras(arquivo)){
-            arv = adicionarNaArvore(palavraNode,true);
+            adicionarNaArvore(palavraNode,true);
         }
-        return ResponseEntity.ok(salvarArvore(arv));
+        Arvore arv;
+        if (arvoreControl.getArvore().getId() != null){
+            arv = updateArvore(arvoreControl.getArvore());
+        } else {
+            arv = salvarArvore(arvoreControl.getArvore());
+        }
+        return ResponseEntity.ok(GerarDTO.daArvore(arv));
     }
 
     public ResponseEntity adicionarNodeArvoreSimples(String texto){

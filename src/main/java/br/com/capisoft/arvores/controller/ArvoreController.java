@@ -23,4 +23,14 @@ public class ArvoreController {
     public ResponseEntity uploadArquivoTeste(@PathVariable String palavra) throws IOException {
         return arvoresService.buscarNode(palavra);
     }
+
+    @PostMapping("/simples/uploadTXT")
+    public ResponseEntity uploadArquivo(MultipartFile txt) throws IOException {
+        return arvoresService.obterTXTMontarArvoreSimples(txt);
+    }
+
+    @PostMapping("/avl/uploadTXT")
+    public ResponseEntity uploadArquivoArvoreAVL(MultipartFile txt) throws IOException{
+        return arvoresService.obterTXTEMontarArvoreAVL(txt);
+    }
 }

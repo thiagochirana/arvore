@@ -1,6 +1,13 @@
 package br.com.capisoft.arvores.models.DTOs;
 
-public record ArvoreDTO(
+import br.com.capisoft.arvores.models.Palavra;
 
+import java.util.List;
+
+public record ArvoreDTO(
+        boolean isAVL,
+        List<PalavraDTO> palavras,
+
+        NodeDTO raiz
 ) {
 }
