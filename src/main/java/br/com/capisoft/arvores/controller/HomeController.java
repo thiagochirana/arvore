@@ -27,9 +27,4 @@ public class HomeController {
     public ResponseEntity uploadArquivoTeste(MultipartFile txt) throws IOException {
         return arvoresService.arquivoLeituraTeste(txt);
     }
-
-    @PostMapping("/arquivo/upload")
-    public ResponseEntity uploadArquivo(MultipartFile txt) throws IOException {
-        return arvoresService.obterTXTMontarArvoreSimples(txt);
-    }
 }

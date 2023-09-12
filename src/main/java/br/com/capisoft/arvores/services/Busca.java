@@ -9,7 +9,9 @@ public class Busca {
 
     private static Logger LOG = LoggerFactory.getLogger(Busca.class);
 
-    public static Node binariaDaArvore(Arvore arvore, String textoDoNodeBuscado){
+    public Busca(){}
+
+    public Node binariaDaArvore(Arvore arvore, String textoDoNodeBuscado){
         LOG.info("----------------------------------------------");
         LOG.info("INICIANDO BUSCA BINÁRIA NA "+arvore.toString());
         Node no = buscaBinaria(arvore.getRoot(), textoDoNodeBuscado);
@@ -21,25 +23,64 @@ public class Busca {
         return no;
     }
 
-    public static Node binariaNoNode(Node node, String textoDoNodeBuscado){
+    public Node binariaNoNode(Node node, String textoDoNodeBuscado){
         LOG.info("VOU REALIZAR UMA BUSCA BINÁRIA NA ARVORE "+node.toString());
         Node no = buscaBinaria(node, textoDoNodeBuscado);
         if (no == null) {
-            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" NÃO encontrado a partir do Node \""+node.getTexto().toUpperCase()+"\"\n----------------------------------------------\n");
+            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" NÃO encontrado a partir do Node \""+node.getPalavra().toUpperCase()+"\"\n----------------------------------------------\n");
         } else {
-            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" foi encontrado a partir do Node \""+node.getTexto().toUpperCase()+"\"\n----------------------------------------------\n");
+            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" foi encontrado a partir do Node \""+node.getPalavra().toUpperCase()+"\"\n----------------------------------------------\n");
         }
         return no;
     }
 
-    private static Node buscaBinaria(Node node, String texto){
+    public int obterAlturaDoNode(Arvore arvore, Node node){
+        int a = verificarAlturaBuscaBinaria(arvore.getRoot(),node);
+        LOG.info("VERIFICACAO DE ALTURA | A altura atual do "+node+" é "+a);
+        return a;
+    }
+
+    public int obterNiveis(Node node){
+        int v = niveis(node);
+        return v;
+    }
+
+    public Node buscarNodeDesbalanceado(Node root){
+        if (root == null){
+            return null;
+        }
+        int fator = obterNiveis(root.getNoDireito()) - obterNiveis(root.getNoEsquerdo());
+        if (fator < -2 || fator > 2) {
+            return root;
+        } else {
+            buscarNodeDesbalanceado(root.getNoEsquerdo());
+            buscarNodeDesbalanceado(root.getNoDireito());
+        }
+        return null;
+    }
+
+    private int niveis(Node node){
+        int esq = 0;
+        int dir = 0;
+
+        if (node == null) {
+            return 0;
+        }
+
+        esq = niveis(node.getNoEsquerdo());
+        dir = niveis(node.getNoDireito());
+
+        return Math.max(esq, dir) + 1;
+    }
+
+    private Node buscaBinaria(Node node, String texto){
         LOG.info("BUSCA BINARIA | Buscando \""+texto.toUpperCase()+"\", a partir do Node \""+node.toString()+"\"");
 
-        if (node.getTexto().equals(texto)){
+        if (node.getPalavra().equals(texto)){
             LOG.info("BUSCA BINARIA | NODE ENCONTRADO! | "+node);
             return node;
         }
-        int res = node.getTexto().compareTo(texto);
+        int res = node.getPalavra().compareTo(texto);
         if (res == 0){
             LOG.info("BUSCA BINARIA | NODE ENCONTRADO! | "+node);
             return node;
@@ -56,5 +97,30 @@ public class Busca {
             }
         }
         return null;
+    }
+
+    private int verificarAlturaBuscaBinaria(Node raiz, Node nodeBuscado){
+        int cont = 0;
+        if (nodeBuscado == null){
+            return cont;
+        }
+        String buscado = nodeBuscado.getPalavra();
+        if (raiz.getPalavra().equals(buscado)){
+            return cont;
+        }
+        int res = raiz.getPalavra().compareTo(buscado);
+        if (res == 0){
+            return cont;
+        }
+        if (res > 0){
+            if (raiz.contemNoEsquerdo()){
+                cont += verificarAlturaBuscaBinaria(raiz.getNoEsquerdo(), nodeBuscado) + 1;
+            }
+        } else {
+            if (raiz.contemNoDireito()){
+                cont += verificarAlturaBuscaBinaria(raiz.getNoDireito(), nodeBuscado) + 1;
+            }
+        }
+        return cont;
     }
 }

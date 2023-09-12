@@ -84,7 +84,7 @@ public class Arvore {
 
             while (iterator.hasNext()) {
                 Palavra p = iterator.next();
-                if (p.getPalavra().equals(word)) {
+                if (p.getPalavra().toLowerCase().equals(word)) {
                     p.aumentarContagem();
                     palavraEncontrada = true;
                     break; // Exit the loop since we found the word

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class Dados {
 
-    private List<String> texto;
+    List<String> listaPalavras;
 
     public void adicionarTextoTeste(MultipartFile arquivo) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
@@ -48,7 +48,7 @@ public class Dados {
             }
         }
         reader.close();
-        this.texto = lista;
+        this.listaPalavras = lista;
         return lista;
     }
 
@@ -72,10 +72,10 @@ public class Dados {
     }
 
     public List<String> getTextoCarregado(){
-        return this.texto;
+        return this.listaPalavras;
     }
 
     public boolean listaEstaVazia(){
-        return this.texto != null;
+        return this.listaPalavras != null;
     }
 }
