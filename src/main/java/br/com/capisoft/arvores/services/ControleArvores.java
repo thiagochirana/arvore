@@ -32,11 +32,11 @@ public class ControleArvores {
             Node no = busca.binariaDaArvore(arvore,node.getPalavra());
             if(no != null){
                 LOG.info("Node com texto "+node.getPalavra().toUpperCase()+" foi encontrado na árvore, logo, não irei preencher, apenas adicionar a contagem de palavras");
-                arvore.adicionarNaListaDePalavras(node.getPalavra());
             } else {
                 LOG.info("Vou adicionar o node pois foi verificado que o mesmo não foi encontrado na árvore -> "+node.toString());
-                arvore.setRoot(inserirNo(arvore.getRoot(), node.getPalavra()));
+                arvore.setRoot(inserirNo(arvore.getRoot(), node.getPalavra().toLowerCase()));
             }
+            arvore.adicionarNaListaDePalavras(node.getPalavra());
         }
     }
 

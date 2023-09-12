@@ -70,7 +70,7 @@ public class Node {
     }
 
     public String getPalavra(){
-        return this.palavra;
+        return this.palavra.toLowerCase();
     }
 
     public void adicionarNivel(){

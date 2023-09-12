@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class ArvoresService {
@@ -41,36 +42,30 @@ public class ArvoresService {
 
     public ResponseEntity obterTXTMontarArvoreSimples(MultipartFile arquivo) throws IOException {
         for (String palavraNode : dados.carregarListaDePalavras(arquivo)){
-            adicionarNaArvore(palavraNode,false);
+            adicionarNaArvore(palavraNode.toLowerCase(),false);
         }
-        Arvore arv;
-        if (arvoreSimplesControl.getArvore().getId() != null){
-            arv = updateArvore(arvoreSimplesControl.getArvore());
-        } else {
-            arv = salvarArvore(arvoreSimplesControl.getArvore());
-        }
-        return ResponseEntity.ok(GerarDTO.daArvore(arv));
+        return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arvoreSimplesControl.getArvore())));
     }
 
     public ResponseEntity obterTXTEMontarArvoreAVL(MultipartFile arquivo) throws IOException {
         for (String palavraNode : dados.carregarListaDePalavras(arquivo)){
-            adicionarNaArvore(palavraNode,true);
+            adicionarNaArvore(palavraNode.toLowerCase(),true);
         }
-        Arvore arv;
-        if (arvoreAVLControl.getArvore().getId() != null){
-            arv = updateArvore(arvoreAVLControl.getArvore());
-        } else {
-            arv = salvarArvore(arvoreAVLControl.getArvore());
-        }
-        return ResponseEntity.ok(GerarDTO.daArvore(arv));
+        return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arvoreAVLControl.getArvore())));
     }
 
     public ResponseEntity adicionarNodeArvoreSimples(String texto){
+        if (arvoreSimplesControl == null){
+            return ResponseEntity.badRequest().body("Sem arvore simples para inserir. Crie uma realizando um Upload de arquivo");
+        }
         Arvore arv = adicionarNaArvore(texto,false);
         return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arv)));
     }
 
     public ResponseEntity adicionarNodeArvoreAVL(String texto){
+        if (arvoreAVLControl == null){
+            return ResponseEntity.badRequest().body("Sem arvore AVL para inserir. Crie uma realizando um Upload de arquivo");
+        }
         Arvore arv = adicionarNaArvore(texto, true);
         return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arv)));
     }
@@ -95,21 +90,31 @@ public class ArvoresService {
         }
     }
 
+    public ResponseEntity buscarArvores(Long id){
+        Optional<Arvore> find = arvores.findById(id);
+        if (find.isPresent()){
+            return ResponseEntity.ok(GerarDTO.daArvore(find.get()));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    // ----- METODOS PRIVADOS -----
     private Arvore adicionarNaArvore(String textoNode, boolean isAVL){
         Node novoNode = new Node(textoNode);
-        Arvore arvore = new Arvore(novoNode, isAVL);
         if (isAVL){
             if (arvoreAVLControl == null){
-                LOG.info("Arvore está vazia, vou iniciar ela com o root -> "+novoNode+ (isAVL ? ", tipo será AVL." : " sem balanceamento, tipo Simples binária."));
-                arvoreAVLControl = new ControleArvores(arvore);
+                LOG.info("Arvore está vazia, vou iniciar ela com o root -> "+novoNode+ ", tipo será AVL.");
+                arvoreAVLControl = new ControleArvores(new Arvore(novoNode, true));
             } else {
                 arvoreAVLControl.adicionarNaArvore(novoNode);
             }
             return arvoreAVLControl.getArvore();
         } else {
             if (arvoreSimplesControl == null){
-                LOG.info("Arvore está vazia, vou iniciar ela com o root -> "+novoNode+ (isAVL ? ", tipo será AVL." : " sem balanceamento, tipo Simples binária."));
-                arvoreSimplesControl = new ControleArvores(arvore);
+                LOG.info("Arvore está vazia, vou iniciar ela com o root "+novoNode+ " sem balanceamento, tipo Simples binária.");
+                arvoreSimplesControl = new ControleArvores(new Arvore(novoNode, false));
             } else {
                 arvoreSimplesControl.adicionarNaArvore(novoNode);
             }
