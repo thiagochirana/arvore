@@ -1,10 +1,10 @@
 const getTreeData = () => {
     return {
-        element: 'test',
+        element: "raiz",
         left: {
-            element: 'test12',
+            element: "chirana gay",
             left: {
-                element: 'test122',
+                element: 'null',
             },
             right: {
                 element: 'test123',
@@ -47,38 +47,50 @@ const getTreeData = () => {
 };
 
 const renderTree = (node) => {
+    if (node === null || typeof node !== 'object') {
+        return ''; // Retorna uma string vazia se o nó for null ou não for um objeto
+    }
+
     const { left, right, element } = node;
+
+    if (element === 'null') {
+        return ''; // Retorna uma string vazia se o elemento for 'null'
+    }
+
     return `
-    <div class="node__element">${element}</div>
-    ${
+        <div class="node__element">${element}</div>
+        ${
         left || right
             ? `
-          <div class="node__bottom-line"></div>
-          <div class="node__children">
-            ${
+              <div class="node__bottom-line"></div>
+              <div class="node__children">
+                ${
                 left
                     ? `
-                <div class="node node--left">
-                  ${renderTree(left)}
-                </div>
-                `
+                    <div class="node node--left">
+                      ${renderTree(left)}
+                    </div>
+                    `
                     : ''
             }
-            ${
+                ${
                 right
                     ? `
-                <div class="node node--right">
-                  ${renderTree(right)}
-                </div>
-                `
+                    <div class="node node--right">
+                      ${renderTree(right)}
+                    </div>
+                    `
                     : ''
             }
-          </div>
-        `
+              </div>
+            `
             : ''
     }
-  `;
+    `;
 };
+
+
+
 
 const main = () => {
     const rootNode = getTreeData();
