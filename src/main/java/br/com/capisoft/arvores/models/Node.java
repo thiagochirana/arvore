@@ -14,79 +14,79 @@ public class Node {
     private Long id;
 
     @Column(name = "palavra")
-    private String texto;
+    public String palavra;
 
     @Column(name = "nivel_atual")
-    private int nivelAtual = 0;
+    public int niveis = 0;
 
     @Column(name = "altura_atual")
-    private int altura = 0;
+    public int altura = 0;
 
     @ManyToOne
-    private Node nodeDireito;
+    public Node direita;
 
     @ManyToOne
-    private Node nodeEsquerdo;
+    public Node esquerda;
 
     @Transient
-    private int fatorBalanceamento = 0;
+    public int fatorBalanceamento = 0;
 
-    public Node(String texto) {
-        this.texto = texto;
+    public Node(String palavra) {
+        this.palavra = palavra;
     }
 
     public Node(){}
 
     public Node getNoDireito(){
-       return this.nodeDireito;
+       return this.direita;
     }
 
     public Node getNoEsquerdo(){
-        return this.nodeEsquerdo;
+        return this.esquerda;
     }
 
     public boolean contemNoDireito(){
-        return this.nodeDireito != null;
+        return this.direita != null;
     }
 
     public boolean contemNoEsquerdo(){
-        return this.nodeEsquerdo != null;
+        return this.esquerda != null;
     }
 
     public void adicionarNaEsquerda(Node node){
-        this.nodeEsquerdo = node;
+        this.esquerda = node;
     }
 
     public void adicionarNaDireita(Node node){
-        this.nodeDireito = node;
+        this.direita = node;
     }
 
     public void removerNaEsquerda(){
-        this.nodeEsquerdo = null;
+        this.esquerda = null;
     }
 
     public void removerNaDireita(){
-        this.nodeDireito = null;
+        this.direita = null;
     }
 
-    public String getTexto(){
-        return this.texto;
+    public String getPalavra(){
+        return this.palavra;
     }
 
     public void adicionarNivel(){
-        this.nivelAtual++;
+        this.niveis++;
     }
 
     public void removerNivel(){
-        this.nivelAtual--;
+        this.niveis--;
     }
 
-    public int getNivelAtual() {
-        return nivelAtual;
+    public int getNiveis() {
+        return niveis;
     }
 
-    public void setNivelAtual(int nivelAtual) {
-        this.nivelAtual = nivelAtual;
+    public void setNiveis(int niveis) {
+        this.niveis = niveis;
     }
 
     public int getFatorBalanceamento() {
@@ -105,12 +105,12 @@ public class Node {
         this.altura = altura;
     }
 
-    public void setNodeEsquerdo(Node node){
-        this.nodeEsquerdo = node;
+    public void setEsquerda(Node node){
+        this.esquerda = node;
     }
 
-    public void setNodeDireito(Node node){
-        this.nodeDireito = node;
+    public void setDireita(Node node){
+        this.direita = node;
     }
 
     public Long getId() {
@@ -120,8 +120,8 @@ public class Node {
     public NodeSimplesDTO getDTO(){
         return new NodeSimplesDTO(
                 this.getId(),
-                this.getTexto(),
-                this.getNivelAtual()
+                this.getPalavra(),
+                this.getNiveis()
         );
     }
 
@@ -130,16 +130,16 @@ public class Node {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
-        return nivelAtual == node.nivelAtual && Objects.equals(id, node.id) && Objects.equals(texto, node.texto) && Objects.equals(nodeDireito, node.nodeDireito) && Objects.equals(nodeEsquerdo, node.nodeEsquerdo);
+        return niveis == node.niveis && Objects.equals(id, node.id) && Objects.equals(palavra, node.palavra) && Objects.equals(direita, node.direita) && Objects.equals(esquerda, node.esquerda);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, texto, nivelAtual, nodeDireito, nodeEsquerdo);
+        return Objects.hash(id, palavra, niveis, direita, esquerda);
     }
 
     @Override
     public String toString() {
-        return "NODE['" + texto.toUpperCase() + "\']";
+        return "NODE['" + palavra.toUpperCase() + "\']";
     }
 }

@@ -27,9 +27,9 @@ public class Busca {
         LOG.info("VOU REALIZAR UMA BUSCA BINÁRIA NA ARVORE "+node.toString());
         Node no = buscaBinaria(node, textoDoNodeBuscado);
         if (no == null) {
-            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" NÃO encontrado a partir do Node \""+node.getTexto().toUpperCase()+"\"\n----------------------------------------------\n");
+            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" NÃO encontrado a partir do Node \""+node.getPalavra().toUpperCase()+"\"\n----------------------------------------------\n");
         } else {
-            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" foi encontrado a partir do Node \""+node.getTexto().toUpperCase()+"\"\n----------------------------------------------\n");
+            LOG.info("BUSCA BINARIA | NADA ENCONTRADO | Node \""+textoDoNodeBuscado.toUpperCase()+"\" foi encontrado a partir do Node \""+node.getPalavra().toUpperCase()+"\"\n----------------------------------------------\n");
         }
         return no;
     }
@@ -76,11 +76,11 @@ public class Busca {
     private Node buscaBinaria(Node node, String texto){
         LOG.info("BUSCA BINARIA | Buscando \""+texto.toUpperCase()+"\", a partir do Node \""+node.toString()+"\"");
 
-        if (node.getTexto().equals(texto)){
+        if (node.getPalavra().equals(texto)){
             LOG.info("BUSCA BINARIA | NODE ENCONTRADO! | "+node);
             return node;
         }
-        int res = node.getTexto().compareTo(texto);
+        int res = node.getPalavra().compareTo(texto);
         if (res == 0){
             LOG.info("BUSCA BINARIA | NODE ENCONTRADO! | "+node);
             return node;
@@ -104,11 +104,11 @@ public class Busca {
         if (nodeBuscado == null){
             return cont;
         }
-        String buscado = nodeBuscado.getTexto();
-        if (raiz.getTexto().equals(buscado)){
+        String buscado = nodeBuscado.getPalavra();
+        if (raiz.getPalavra().equals(buscado)){
             return cont;
         }
-        int res = raiz.getTexto().compareTo(buscado);
+        int res = raiz.getPalavra().compareTo(buscado);
         if (res == 0){
             return cont;
         }

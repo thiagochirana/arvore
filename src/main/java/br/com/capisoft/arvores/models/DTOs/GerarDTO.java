@@ -26,7 +26,7 @@ public class GerarDTO {
         if (node.contemNoDireito()){
             dir = gerarDTO(node.getNoDireito());
         }
-        return new NodeDTO(node.getTexto(), esq, dir);
+        return new NodeDTO(node.getPalavra(), esq, dir);
     }
 
     private static List<PalavraDTO> palavrasDaArvore(Arvore arvore){
