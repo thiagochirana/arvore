@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,13 +21,15 @@ public class ArvoreController {
     @Autowired
     private ArvoresService arvoresService;
 
-    @GetMapping("/buscaPalavra={palavra}&arvoreIsAVL={isAVL}")
-    public ResponseEntity uploadArquivoTeste(@PathVariable String palavra, @PathVariable boolean isAVL) {
+
+    @GetMapping("/buscaPalavra")
+    @ResponseBody
+    public ResponseEntity uploadArquivoTeste(@RequestParam("palavra") String palavra, @RequestParam("arvoreIsAVL") boolean isAVL) {
         return arvoresService.buscarNode(palavra,isAVL);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity buscarArvore(@PathVariable Long id){
+    @GetMapping("/buscarArvore")
+    public ResponseEntity buscarArvore(@RequestParam("id") Long id){
         return arvoresService.buscarArvores(id);
     }
 
@@ -48,15 +47,15 @@ public class ArvoreController {
         return arvoresService.obterTXTEMontarArvoreAVL(txt);
     }
 
-    @PostMapping("/simples/adicionar={palavra}")
+    @PostMapping("/simples/adicionar")
     @Transactional
-    public ResponseEntity adicionarNodeSimples(@PathVariable String palavra){
+    public ResponseEntity adicionarNodeSimples(@RequestParam("palavra") String palavra){
         return arvoresService.adicionarNodeArvoreSimples(palavra.toLowerCase());
     }
 
-    @PostMapping("/avl/adicionar={palavra}")
+    @PostMapping("/avl/adicionar")
     @Transactional
-    public ResponseEntity adicionarNodeAVL(@PathVariable String palavra){
+    public ResponseEntity adicionarNodeAVL(@RequestParam("palavra") String palavra){
         return arvoresService.adicionarNodeArvoreAVL(palavra.toLowerCase());
     }
 }
