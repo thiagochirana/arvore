@@ -26,7 +26,7 @@ public class Busca {
     private Node buscaBinaria(Node node, String texto){
         LOG.info("BUSCA BINARIA | Buscando \""+texto.toUpperCase()+"\", a partir do Node \""+node.toString()+"\"");
 
-        if (node.getPalavra().equals(texto)){
+        if (node.getPalavra().equals(texto.toLowerCase())){
             LOG.info("BUSCA BINARIA | NODE ENCONTRADO! | "+node);
             return node;
         }
@@ -38,12 +38,12 @@ public class Busca {
         if (res > 0){
             if (node.contemNoEsquerdo()){
                 LOG.info("BUSCA BINARIA | <<< ESQUERDA <<< | verificando na esquerda do \""+node+"\"");
-                return buscaBinaria(node.getNoEsquerdo(), texto);
+                return buscaBinaria(node.getNoEsquerdo(), texto.toLowerCase());
             }
         } else {
             if (node.contemNoDireito()){
                 LOG.info("BUSCA BINARIA | >>> DIREITA >>> | verificando na direita do \""+node+"\"");
-                return buscaBinaria(node.getNoDireito(), texto);
+                return buscaBinaria(node.getNoDireito(), texto.toLowerCase());
             }
         }
         return null;
