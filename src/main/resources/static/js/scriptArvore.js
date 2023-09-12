@@ -1,43 +1,43 @@
 const getTreeData = () => {
     return {
-        element: 'test',
-        left: {
-            element: 'test12',
-            left: {
-                element: 'test122',
+        palavra: "raiz",
+        nodeEsquerdo: {
+            palavra: "chirana gay",
+            nodeEsquerdo: {
+                palavra: 'null',
             },
-            right: {
-                element: 'test123',
+            nodeDireito: {
+                palavra: 'test123',
             },
         },
-        right: {
-            element: 'test13',
-            left: {
-                element: 'test132',
-                left: {
-                    element: 'test1321',
-                    left: {
-                        element: 'test13211',
+        nodeDireito: {
+            palavra: 'test13',
+            nodeEsquerdo: {
+                palavra: 'test132',
+                nodeEsquerdo: {
+                    palavra: 'test1321',
+                    nodeEsquerdo: {
+                        palavra: 'test13211',
                     },
                 },
             },
-            right: {
-                element: 'test133',
-                left: {
-                    element: 'test1332',
+            nodeDireito: {
+                palavra: 'test133',
+                nodeEsquerdo: {
+                    palavra: 'test1332',
                 },
-                right: {
-                    element: 'test1333',
-                    left: {
-                        element: 'test1321',
-                        left: {
-                            element: 'test13211',
+                nodeDireito: {
+                    palavra: 'test1333',
+                    nodeEsquerdo: {
+                        palavra: 'test1321',
+                        nodeEsquerdo: {
+                            palavra: 'test13211',
                         },
                     },
-                    right: {
-                        element: 'test1321',
-                        right: {
-                            element: 'test13211',
+                    nodeDireito: {
+                        palavra: 'test1321',
+                        nodeDireito: {
+                            palavra: 'test13211',
                         },
                     },
                 },
@@ -47,38 +47,50 @@ const getTreeData = () => {
 };
 
 const renderTree = (node) => {
-    const { left, right, element } = node;
+    if (node === null || typeof node !== 'object') {
+        return ''; // Retorna uma string vazia se o nó for null ou não for um objeto
+    }
+
+    const { nodeEsquerdo, nodeDireito, palavra } = node;
+
+    if (palavra === 'null') {
+        return ''; // Retorna uma string vazia se o elemento for 'null'
+    }
+
     return `
-    <div class="node__element">${element}</div>
-    ${
-        left || right
+        <div class="node__element">${palavra}</div>
+        ${
+        nodeEsquerdo || nodeDireito
             ? `
-          <div class="node__bottom-line"></div>
-          <div class="node__children">
-            ${
-                left
+              <div class="node__bottom-line"></div>
+              <div class="node__children">
+                ${
+                nodeEsquerdo
                     ? `
-                <div class="node node--left">
-                  ${renderTree(left)}
-                </div>
-                `
+                    <div class="node node--left">
+                      ${renderTree(nodeEsquerdo)}
+                    </div>
+                    `
                     : ''
             }
-            ${
-                right
+                ${
+                nodeDireito
                     ? `
-                <div class="node node--right">
-                  ${renderTree(right)}
-                </div>
-                `
+                    <div class="node node--right">
+                      ${renderTree(nodeDireito)}
+                    </div>
+                    `
                     : ''
             }
-          </div>
-        `
+              </div>
+            `
             : ''
     }
-  `;
+    `;
 };
+
+
+
 
 const main = () => {
     const rootNode = getTreeData();
