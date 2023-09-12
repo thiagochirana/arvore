@@ -120,8 +120,7 @@ public class Node {
     public NodeSimplesDTO getDTO(){
         return new NodeSimplesDTO(
                 this.getId(),
-                this.getPalavra(),
-                this.getNiveis()
+                this.getPalavra()
         );
     }
 
