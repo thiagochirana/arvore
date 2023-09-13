@@ -12,6 +12,9 @@ public class GerarDTO {
     public static ArvoreDTO daArvore(Arvore arvore){
         return new ArvoreDTO(
                 arvore.isAVL(),
+                arvore.rotacoes,
+                arvore.comparacoes,
+                arvore.tempoDeExecucao,
                 palavrasDaArvore(arvore),
                 gerarDTO(arvore.getRoot())
         );

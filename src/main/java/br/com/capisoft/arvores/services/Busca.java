@@ -9,6 +9,8 @@ public class Busca {
 
     private static Logger LOG = LoggerFactory.getLogger(Busca.class);
 
+    private int pass = 0;
+
     public Busca(){}
 
     public Node binariaDaArvore(Arvore arvore, String textoDoNodeBuscado){
@@ -23,7 +25,14 @@ public class Busca {
         return no;
     }
 
+    public int getPassosDados(){
+        int aux = this.pass;
+        this.pass = 0;
+        return aux;
+    }
+
     private Node buscaBinaria(Node node, String texto){
+        pass++;
         LOG.info("BUSCA BINARIA | Buscando \""+texto.toUpperCase()+"\", a partir do Node \""+node.toString()+"\"");
 
         if (node.getPalavra().equals(texto.toLowerCase())){
