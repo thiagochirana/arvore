@@ -58,4 +58,10 @@ public class ArvoreController {
     public ResponseEntity adicionarNodeAVL(@RequestParam("palavra") String palavra){
         return arvoresService.adicionarNodeArvoreAVL(palavra.toLowerCase());
     }
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity removerTodasAsArvores(){
+        return arvoresService.deletarArvores();
+    }
 }

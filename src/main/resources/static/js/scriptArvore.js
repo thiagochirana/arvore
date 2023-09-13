@@ -44,7 +44,7 @@ function renderTree (node) {
 
 
 function mostrarArvore(arvoreJSON){
-
+    console.log(arvoreJSON)
     let treeDOMElement = document.querySelector(".tree");
     treeDOMElement.innerHTML = renderTree(arvoreJSON.raiz);
 
@@ -52,11 +52,12 @@ function mostrarArvore(arvoreJSON){
     for (let p of arvoreJSON.palavras){
         mostrarFreqPalavras(p.palavra,p.quantidade)
     }
-
+    console.log(arvoreJSON.isAVL)
     mostrarRelatorio(arvoreJSON.isAVL, arvoreJSON.rotacoes, arvoreJSON.comparacoes, arvoreJSON.tempoDeExecucao)
 
     console.log("mostrando arvore");
     document.querySelector(".arvore").classList.remove("hidden");
+    document.querySelector(".divDosBotoes").classList.add("hidden");
     document.querySelector(".frequenciaPalavras").classList.remove("hidden");
     document.querySelector(".contadoresArvore").classList.remove("hidden");
 }
@@ -67,7 +68,7 @@ function mostrarFreqPalavras(palavra, qte){
 
 function mostrarRelatorio(isAVL,rotacoes,comparacoes,tempoExecucao){
     let body = document.querySelector(".dados")
-    if (!isAVL){
+    if (isAVL){
         mostrarRows("É AVL?","Sim",body)
         mostrarRows("Rotações",rotacoes,body)
     }
@@ -93,5 +94,6 @@ function mostrarRows(palavra, qte, element){
 
 function reloadPage(){
     console.log("recarregando...");
+    request("http://localhost:8080/arvore","DELETE")
     window.location.reload(true);
 }

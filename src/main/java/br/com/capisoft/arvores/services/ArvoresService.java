@@ -119,6 +119,15 @@ public class ArvoresService {
         }
     }
 
+    public ResponseEntity deletarArvores(){
+        arvoreAVLControl = null;
+        arvoreSimplesControl = null;
+        arvores.deleteAll();
+        nodes.deleteAll();
+        LOG.info("Deletado todos os nodes e árvores salvos");
+        return ResponseEntity.ok("Todas as arvores foram excluídas");
+    }
+
 
     // ----- METODOS PRIVADOS -----
     private Arvore adicionarNaArvore(String textoNode, boolean isAVL){
