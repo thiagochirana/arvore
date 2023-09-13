@@ -14,30 +14,30 @@ function renderTree (node) {
         <div class="node__element">${palavra}</div>
         ${
         nodeEsquerdo || nodeDireito
-            ? `
-              <div class="node__bottom-line"></div>
-              <div class="node__children">
-                ${
-                nodeEsquerdo
-                    ? `
-                    <div class="node node--left">
-                      ${renderTree(nodeEsquerdo)}
-                    </div>
-                    `
-                    : ''
-            }
-                ${
-                nodeDireito
-                    ? `
-                    <div class="node node--right">
-                      ${renderTree(nodeDireito)}
-                    </div>
-                    `
-                    : ''
-            }
-              </div>
-            `
-            : ''
+        ? `
+          <div class="node__bottom-line"></div>
+          <div class="node__children">
+            ${
+            nodeEsquerdo
+                ? `
+                <div class="node node--left">
+                  ${renderTree(nodeEsquerdo)}
+                </div>
+                `
+                : ''
+        }
+            ${
+            nodeDireito
+                ? `
+                <div class="node node--right">
+                  ${renderTree(nodeDireito)}
+                </div>
+                `
+                : ''
+        }
+          </div>
+        `
+        : ''
     }
     `;
 }
