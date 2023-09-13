@@ -1,3 +1,9 @@
+body{
+    display: flex;
+    justify-content: space-between;
+    padding: 5vh;
+}
+
 .container {
     margin-top: 30px;
     display: flex;
@@ -47,7 +53,7 @@
     cursor: pointer;
     border: 1px solid transparent;
     height: 40px;
-    background-color: rgb(188, 117, 246);
+    background-color: rgb(17, 208, 208);
     border-radius: 16px;
     min-width: 60px;
     max-width: max-content;
@@ -96,4 +102,10 @@
 .node__element:hover ~ .node__children .node__children {
     border-top-width: 2px;
     border-color: var(--dark);
+}
+
+.uploadArquivos{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }

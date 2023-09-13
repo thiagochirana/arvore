@@ -1,50 +1,56 @@
 const getTreeData = () => {
-    return {
-        palavra: "raiz",
-        nodeEsquerdo: {
-            palavra: "chirana gay",
-            nodeEsquerdo: {
-                palavra: 'null',
+    return    {
+        "palavra": "dddddddddddd",
+        "nodeEsquerdo": {
+            "palavra": "bbbbbbbbbb",
+            "nodeEsquerdo": {
+                "palavra": "aaaaaaaaaaa",
+                "nodeEsquerdo": null,
+                "nodeDireito": null
             },
-            nodeDireito: {
-                palavra: 'test123',
-            },
+            "nodeDireito": {
+                "palavra": "cccccccccccc",
+                "nodeEsquerdo": null,
+                "nodeDireito": null
+            }
         },
-        nodeDireito: {
-            palavra: 'test13',
-            nodeEsquerdo: {
-                palavra: 'test132',
-                nodeEsquerdo: {
-                    palavra: 'test1321',
-                    nodeEsquerdo: {
-                        palavra: 'test13211',
-                    },
-                },
+        "nodeDireito": {
+            "palavra": "ffffffffff",
+            "nodeEsquerdo": {
+                "palavra": "eeeeeeeeeeee",
+                "nodeEsquerdo": null,
+                "nodeDireito": null
             },
-            nodeDireito: {
-                palavra: 'test133',
-                nodeEsquerdo: {
-                    palavra: 'test1332',
-                },
-                nodeDireito: {
-                    palavra: 'test1333',
-                    nodeEsquerdo: {
-                        palavra: 'test1321',
-                        nodeEsquerdo: {
-                            palavra: 'test13211',
-                        },
-                    },
-                    nodeDireito: {
-                        palavra: 'test1321',
-                        nodeDireito: {
-                            palavra: 'test13211',
-                        },
-                    },
-                },
-            },
-        },
-    };
+            "nodeDireito": {
+                "palavra": "ggggggggggg",
+                "nodeEsquerdo": null,
+                "nodeDireito": {
+                    "palavra": "hhhhhhhhh",
+                    "nodeEsquerdo": null,
+                    "nodeDireito": null
+                }
+            }
+        }
+}
+
+
+
+
 };
+
+
+function queryRequest(){
+    var input = document.querySelector('input[type="file"]')
+
+    var data = new FormData()
+    data.append('file', input.files[0])
+    data.append('user', 'hubot')
+
+    fetch('/avatars', {
+        method: 'POST',
+        body: data
+    })
+}
 
 const renderTree = (node) => {
     if (node === null || typeof node !== 'object') {
