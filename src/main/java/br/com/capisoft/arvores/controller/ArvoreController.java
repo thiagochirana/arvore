@@ -21,7 +21,6 @@ public class ArvoreController {
     @Autowired
     private ArvoresService arvoresService;
 
-
     @GetMapping("/buscaPalavra")
     @ResponseBody
     public ResponseEntity uploadArquivoTeste(@RequestParam("palavra") String palavra, @RequestParam("arvoreIsAVL") boolean isAVL) {

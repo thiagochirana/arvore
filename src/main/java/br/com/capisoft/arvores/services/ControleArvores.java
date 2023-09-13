@@ -50,7 +50,7 @@ public class ControleArvores {
                     .compareTo(palavra.trim().toLowerCase());
 
             if (res > 0) {
-                node.direita = inserirNo(node.esquerda, palavra);
+                node.esquerda = inserirNo(node.esquerda, palavra);
             } else if (res < 0) {
                 node.direita = inserirNo(node.direita, palavra);
             } else {
