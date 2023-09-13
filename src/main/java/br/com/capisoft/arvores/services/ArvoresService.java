@@ -1,6 +1,7 @@
 package br.com.capisoft.arvores.services;
 
 import br.com.capisoft.arvores.models.Arvore;
+import br.com.capisoft.arvores.models.DTOs.BuscaResultadoDTO;
 import br.com.capisoft.arvores.models.DTOs.GerarDTO;
 import br.com.capisoft.arvores.models.Node;
 import br.com.capisoft.arvores.repositories.ArvoreRepository;
@@ -22,7 +23,7 @@ public class ArvoresService {
     private static Logger LOG = LoggerFactory.getLogger(ArvoresService.class);
 
     private Dados dados = new Dados();
-
+    private Tempo tempo = new Tempo();
     private Busca busca = new Busca();
 
     private ControleArvores arvoreSimplesControl;
@@ -41,37 +42,52 @@ public class ArvoresService {
     }
 
     public ResponseEntity obterTXTMontarArvoreSimples(MultipartFile arquivo) throws IOException {
+        long start = System.nanoTime();
         for (String palavraNode : dados.carregarListaDePalavras(arquivo)){
             adicionarNaArvore(palavraNode.toLowerCase(),false);
         }
-        return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arvoreSimplesControl.getArvore())));
+        long stop = System.nanoTime();
+        Arvore arv = arvoreSimplesControl.getArvore();
+        arv.tempoDeExecucao = tempo.formatarTempo(stop - start);
+        return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arv)));
     }
 
     public ResponseEntity obterTXTEMontarArvoreAVL(MultipartFile arquivo) throws IOException {
+        long start = System.nanoTime();
         for (String palavraNode : dados.carregarListaDePalavras(arquivo)){
             adicionarNaArvore(palavraNode.toLowerCase(),true);
         }
-        return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arvoreAVLControl.getArvore())));
+        long stop = System.nanoTime();
+        Arvore arv = arvoreAVLControl.getArvore();
+        arv.tempoDeExecucao = tempo.formatarTempo(stop - start);
+        return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arv)));
     }
 
     public ResponseEntity adicionarNodeArvoreSimples(String texto){
+        long start = System.nanoTime();
         if (arvoreSimplesControl == null){
             return ResponseEntity.badRequest().body("Sem arvore simples para inserir. Crie uma realizando um Upload de arquivo");
         }
         Arvore arv = adicionarNaArvore(texto,false);
+        long stop = System.nanoTime();
+        arv.tempoDeExecucao = tempo.formatarTempo(stop - start);
         return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arv)));
     }
 
     public ResponseEntity adicionarNodeArvoreAVL(String texto){
+        long start = System.nanoTime();
         if (arvoreAVLControl == null){
             return ResponseEntity.badRequest().body("Sem arvore AVL para inserir. Crie uma realizando um Upload de arquivo");
         }
         Arvore arv = adicionarNaArvore(texto, true);
+        long stop = System.nanoTime();
+        arv.tempoDeExecucao = tempo.formatarTempo(stop - start);
         return ResponseEntity.ok(GerarDTO.daArvore(salvarArvore(arv)));
     }
 
     public ResponseEntity buscarNode(String textoDoNode, boolean arvoreIsAVL){
         Node no;
+        long start = System.nanoTime();
         if (arvoreIsAVL){
             if(arvoreAVLControl == null){
                 return ResponseEntity.badRequest().body("Sem arvore AVL para pesquisar. Crie uma e tente novamente");
@@ -83,8 +99,12 @@ public class ArvoresService {
             }
             no = busca.binariaDaArvore(arvoreSimplesControl.getArvore(),textoDoNode);
         }
+        long stop = System.nanoTime();
         if (no != null){
-            return ResponseEntity.ok(no.getDTO());
+            return ResponseEntity.ok( new BuscaResultadoDTO(
+                    no.getDTO(),
+                    tempo.formatarTempo(stop - start),
+                    busca.getPassosDados()));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -127,14 +147,6 @@ public class ArvoresService {
         arvore.setRoot(salvarNodes(arvore.getRoot()));
         Arvore arv = arvores.save(arvore);
         LOG.info("SAVE | Realizado com sucesso!");
-        return arv;
-    }
-
-    private Arvore updateArvore(Arvore arvore){
-        LOG.info("UPDATING ARVORE| Realizando update da arvore...");
-        Arvore find = arvores.findById(arvore.getId()).get();
-        Arvore arv = arvores.save(find);
-        LOG.info("UPDATE | Realizado com sucesso!");
         return arv;
     }
 

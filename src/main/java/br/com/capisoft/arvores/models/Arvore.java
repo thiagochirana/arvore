@@ -29,6 +29,15 @@ public class Arvore {
     @Transient
     boolean isAVL = false;
 
+    @Transient
+    public int comparacoes = 0;
+
+    @Transient
+    public int rotacoes = 0;
+
+    @Transient
+    public String tempoDeExecucao = "";
+
 
     public Arvore(Node root) {
         this.root = root;

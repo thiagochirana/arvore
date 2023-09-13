@@ -10,7 +10,7 @@ public class ControleArvores {
     private static Logger LOG = LoggerFactory.getLogger(ControleArvores.class);
     private Busca busca;
 
-    private Arvore arvore;
+    public Arvore arvore;
 
     public ControleArvores(Arvore arvore){
         this.arvore = arvore;
@@ -41,6 +41,7 @@ public class ControleArvores {
     }
 
     private Node inserirNo(Node node, String palavra){
+        arvore.comparacoes++;
         if (node == null) {
             return new Node(palavra);
         } else{
@@ -87,6 +88,7 @@ public class ControleArvores {
                 node = rotacaoDireita(node);
             }
         }
+        arvore.comparacoes++;
         return node;
     }
 
@@ -99,6 +101,7 @@ public class ControleArvores {
         y.esquerda = z;
         updateAltura(y);
         updateAltura(x);
+        arvore.rotacoes++;
         return x;
     }
 
@@ -109,6 +112,7 @@ public class ControleArvores {
         y.direita = z;
         updateAltura(y);
         updateAltura(x);
+        arvore.rotacoes++;
         return x;
     }
 
