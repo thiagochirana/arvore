@@ -14,6 +14,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/arvore")
+@CrossOrigin(origins = "http://localhost:63342")
 public class ArvoreController {
 
     private static Logger LOG = LoggerFactory.getLogger(ArvoreController.class);
@@ -56,5 +57,11 @@ public class ArvoreController {
     @Transactional
     public ResponseEntity adicionarNodeAVL(@RequestParam("palavra") String palavra){
         return arvoresService.adicionarNodeArvoreAVL(palavra.toLowerCase());
+    }
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity removerTodasAsArvores(){
+        return arvoresService.deletarArvores();
     }
 }
