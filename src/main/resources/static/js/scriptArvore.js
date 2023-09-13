@@ -1,66 +1,13 @@
-const getTreeData = () => {
-    return    {
-        "palavra": "dddddddddddd",
-        "nodeEsquerdo": {
-            "palavra": "bbbbbbbbbb",
-            "nodeEsquerdo": {
-                "palavra": "aaaaaaaaaaa",
-                "nodeEsquerdo": null,
-                "nodeDireito": null
-            },
-            "nodeDireito": {
-                "palavra": "cccccccccccc",
-                "nodeEsquerdo": null,
-                "nodeDireito": null
-            }
-        },
-        "nodeDireito": {
-            "palavra": "ffffffffff",
-            "nodeEsquerdo": {
-                "palavra": "eeeeeeeeeeee",
-                "nodeEsquerdo": null,
-                "nodeDireito": null
-            },
-            "nodeDireito": {
-                "palavra": "ggggggggggg",
-                "nodeEsquerdo": null,
-                "nodeDireito": {
-                    "palavra": "hhhhhhhhh",
-                    "nodeEsquerdo": null,
-                    "nodeDireito": null
-                }
-            }
-        }
-}
 
-
-
-
-};
-
-
-function queryRequest(){
-    var input = document.querySelector('input[type="file"]')
-
-    var data = new FormData()
-    data.append('file', input.files[0])
-    data.append('user', 'hubot')
-
-    fetch('/avatars', {
-        method: 'POST',
-        body: data
-    })
-}
-
-const renderTree = (node) => {
+function renderTree (node) {
     if (node === null || typeof node !== 'object') {
-        return ''; // Retorna uma string vazia se o nó for null ou não for um objeto
+        return '';
     }
 
     const { nodeEsquerdo, nodeDireito, palavra } = node;
 
     if (palavra === 'null') {
-        return ''; // Retorna uma string vazia se o elemento for 'null'
+        return '';
     }
 
     return `
@@ -93,16 +40,58 @@ const renderTree = (node) => {
             : ''
     }
     `;
-};
+}
 
 
+function mostrarArvore(arvoreJSON){
+
+    let treeDOMElement = document.querySelector(".tree");
+    treeDOMElement.innerHTML = renderTree(arvoreJSON.raiz);
+
+    //Loop para exibir as palavras
+    for (let p of arvoreJSON.palavras){
+        mostrarFreqPalavras(p.palavra,p.quantidade)
+    }
+
+    mostrarRelatorio(arvoreJSON.isAVL, arvoreJSON.rotacoes, arvoreJSON.comparacoes, arvoreJSON.tempoDeExecucao)
+
+    console.log("mostrando arvore");
+    document.querySelector(".arvore").classList.remove("hidden");
+    document.querySelector(".frequenciaPalavras").classList.remove("hidden");
+    document.querySelector(".contadoresArvore").classList.remove("hidden");
+}
+
+function mostrarFreqPalavras(palavra, qte){
+    mostrarRows(palavra,qte,document.querySelector(".listaTable"))
+}
+
+function mostrarRelatorio(isAVL,rotacoes,comparacoes,tempoExecucao){
+    let body = document.querySelector(".dados")
+    if (!isAVL){
+        mostrarRows("É AVL?","Sim",body)
+        mostrarRows("Rotações",rotacoes,body)
+    }
+    mostrarRows("Comparacões",comparacoes,body)
+    mostrarRows("Tempo de Execução",tempoExecucao,body)
+}
 
 
-const main = () => {
-    const rootNode = getTreeData();
-    const treeDOMElement = document.querySelector(".tree");
-    treeDOMElement.innerHTML = renderTree(rootNode);
-    console.log("passei aqui");
-};
+// private
+function mostrarRows(palavra, qte, element){
+    let row = document.createElement("tr")
+    let cell1 = document.createElement("td")
+    let cell2 = document.createElement("td")
 
-main();
+    cell1.textContent = palavra;
+    cell2.textContent = qte;
+
+    row.append(cell1);
+    row.append(cell2);
+
+    element.append(row);
+}
+
+function reloadPage(){
+    console.log("recarregando...");
+    window.location.reload(true);
+}

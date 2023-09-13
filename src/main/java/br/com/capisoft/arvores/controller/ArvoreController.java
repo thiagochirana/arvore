@@ -14,6 +14,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/arvore")
+@CrossOrigin(origins = "http://localhost:63342")
 public class ArvoreController {
 
     private static Logger LOG = LoggerFactory.getLogger(ArvoreController.class);

@@ -1,7 +1,29 @@
-body{
+.body-content{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 5vh;
+}
+
+.hidden{
+    display: none;
+}
+
+.divDosBotoes .uploadArquivos{
+    display: grid;
+    justify-items: center;
+}
+
+.toggleButtons{
+    margin-bottom: 30px;
+}
+
+.formArquivo{
+    margin-bottom: 30px;
+}
+
+.bottomPage{
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .container {
