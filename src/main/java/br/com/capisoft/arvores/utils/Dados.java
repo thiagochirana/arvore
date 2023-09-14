@@ -22,20 +22,20 @@ public class Dados {
         }
         reader.close();
     }
-    
+
     public List<String> carregarListaDePalavras(MultipartFile arquivo) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
         String line;
         List<String> lista = new ArrayList<>();
-        Pattern nonAlphanumeric = Pattern.compile("\\p{M}");
+        Pattern specialChars = Pattern.compile("[^\\p{L}0-9\\s]"); // Expressão regular para caracteres especiais
 
         // Carregue as stopwords do arquivo
         Set<String> stopWords = carregarStopWords();
 
         while ((line = reader.readLine()) != null) {
             for (String s : line.split(" ")) {
-                // Remova caracteres não-alfanuméricos
-                String cleanedWord = nonAlphanumeric.matcher(s).replaceAll("");
+                // Remova caracteres não-alfanuméricos (exceto letras acentuadas)
+                String cleanedWord = specialChars.matcher(s).replaceAll("");
 
                 // Normalize a string para remover acentos
                 String normalizedWord = Normalizer.normalize(cleanedWord, Normalizer.Form.NFD);
@@ -43,7 +43,7 @@ public class Dados {
 
                 // Adicionar a palavra sem acento
                 if (!withoutAccentsWord.isEmpty() && !stopWords.contains(withoutAccentsWord.toLowerCase())) {
-                    lista.add(withoutAccentsWord); 
+                    lista.add(withoutAccentsWord);
                 }
             }
         }
@@ -51,6 +51,7 @@ public class Dados {
         this.listaPalavras = lista;
         return lista;
     }
+
 
     // Método para carregar stopwords do arquivo
     private Set<String> carregarStopWords() throws IOException {
