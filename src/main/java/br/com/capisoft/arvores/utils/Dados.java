@@ -1,18 +1,18 @@
 package br.com.capisoft.arvores.utils;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.io.*;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Dados {
 
     List<String> listaPalavras;
+
+    public static long tempoLeituraArquivo = 0;
 
     public void adicionarTextoTeste(MultipartFile arquivo) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
@@ -23,27 +23,37 @@ public class Dados {
         reader.close();
     }
 
+    public static String[] carregarPalavrasEmVetor(MultipartFile arquivo) throws IOException {
+        long start = System.nanoTime();
+        BufferedReader br = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
+        String linha = "";
+        StringBuilder palavrasAux = new StringBuilder();
+        while((linha = br.readLine()) != null){
+            palavrasAux.append(linha).append(' ');
+        }
+        long stop = System.nanoTime();
+        tempoLeituraArquivo = (stop-start);
+        return palavrasAux.toString().split(" ");
+    }
+
     public List<String> carregarListaDePalavras(MultipartFile arquivo) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
         String line;
         List<String> lista = new ArrayList<>();
-        Pattern specialChars = Pattern.compile("[^\\p{L}0-9\\s]"); // Expressão regular para caracteres especiais
+        Pattern wordPattern = Pattern.compile("\\p{L}+"); // Palavras com acentos
 
         // Carregue as stopwords do arquivo
         Set<String> stopWords = carregarStopWords();
 
         while ((line = reader.readLine()) != null) {
             for (String s : line.split(" ")) {
-                // Remova caracteres não-alfanuméricos (exceto letras acentuadas)
-                String cleanedWord = specialChars.matcher(s).replaceAll("");
+                String[] words = s.split("[^\\p{L}]+");
 
-                // Normalize a string para remover acentos
-                String normalizedWord = Normalizer.normalize(cleanedWord, Normalizer.Form.NFD);
-                String withoutAccentsWord = normalizedWord.replaceAll("\\p{M}", "").toLowerCase();
-
-                // Adicionar a palavra sem acento
-                if (!withoutAccentsWord.isEmpty() && !stopWords.contains(withoutAccentsWord.toLowerCase())) {
-                    lista.add(withoutAccentsWord);
+                for (String word : words) {
+                    // Adicione a palavra original à lista
+                    if (!word.isEmpty() && !stopWords.contains(word.toLowerCase())) {
+                        lista.add(word.toLowerCase());
+                    }
                 }
             }
         }
@@ -51,7 +61,6 @@ public class Dados {
         this.listaPalavras = lista;
         return lista;
     }
-
 
     // Método para carregar stopwords do arquivo
     private Set<String> carregarStopWords() throws IOException {
