@@ -1,6 +1,7 @@
 package br.com.capisoft.arvores.services;
 
 import br.com.capisoft.arvores.models.Arvore;
+import br.com.capisoft.arvores.models.Binario;
 import br.com.capisoft.arvores.models.DTOs.BuscaResultadoDTO;
 import br.com.capisoft.arvores.models.DTOs.GerarDTO;
 import br.com.capisoft.arvores.models.Node;
@@ -18,17 +19,21 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
-public class ArvoresService {
+public class ArvoresService{
 
     private static Logger LOG = LoggerFactory.getLogger(ArvoresService.class);
+
+    private static MultipartFile arquivo;
 
     private Dados dados = new Dados();
     private Tempo tempo = new Tempo();
     private Busca busca = new Busca();
 
-    private ControleArvores arvoreSimplesControl;
+    private static Binario vetorBinario = new Binario();
 
-    private ControleArvores arvoreAVLControl;
+    private static ControleArvores arvoreSimplesControl;
+
+    private static ControleArvores arvoreAVLControl;
 
     @Autowired
     private ArvoreRepository arvores;
@@ -36,6 +41,62 @@ public class ArvoresService {
     @Autowired
     private NodeRepository nodes;
 
+    public ResponseEntity processarArquivoParaArvores(MultipartFile arquivo) throws IOException {
+
+        this.arquivo = arquivo;
+
+        try {
+            new Thread(gerarVetorAndArvores).start();
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e);
+        }
+        return ResponseEntity.ok("Carregamento realizado com sucesso");
+    }
+
+    public ResponseEntity obterInformacoes(){
+        LOG.info("Obtendo informaçoes gerais de carregamento e enviar ao cliente");
+        try {
+            return ResponseEntity.ok(GerarDTO.dasInformacoesTotais(vetorBinario, arvoreSimplesControl.getArvore(), arvoreAVLControl.getArvore()));
+        } catch (NullPointerException e){
+            return ResponseEntity.unprocessableEntity().body("Ainda em processamento dos dados, por favor aguarde");
+        }
+    }
+
+
+    private static Runnable gerarVetorAndArvores = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                ExecutarArvores exec = new ExecutarArvores(arquivo,vetorBinario);
+                exec.executarCarregamentoVetorBinario();
+                vetorBinario = exec.vetorBinario;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            new Thread(adicionarEmArvoreAVL).start();
+            new Thread(adicionarEmArvoreSimples).start();
+        }
+    };
+
+    private static Runnable adicionarEmArvoreAVL = new Runnable() {
+        @Override
+        public void run() {
+            for (String palavraNode : vetorBinario.vetorTratado){
+                adicionarNaArvore(palavraNode.toLowerCase(),true);
+            }
+        }
+    };
+
+    private static Runnable adicionarEmArvoreSimples = new Runnable() {
+        @Override
+        public void run() {
+            for (String palavraNode : vetorBinario.vetorTratado){
+                adicionarNaArvore(palavraNode.toLowerCase(),false);
+            }
+        }
+    };
+
+    /// PARA ARVORES RECURSIVAS
     public ResponseEntity arquivoLeituraTeste(MultipartFile arquivo) throws IOException {
         dados.adicionarTextoTeste(arquivo);
         return ResponseEntity.ok("lido com sucesso");
@@ -130,7 +191,7 @@ public class ArvoresService {
 
 
     // ----- METODOS PRIVADOS -----
-    private Arvore adicionarNaArvore(String textoNode, boolean isAVL){
+    private static Arvore adicionarNaArvore(String textoNode, boolean isAVL){
         Node novoNode = new Node(textoNode);
         if (isAVL){
             if (arvoreAVLControl == null){
@@ -171,4 +232,23 @@ public class ArvoresService {
         LOG.info("SALVO | "+no1+" salvo com sucesso.");
         return no1;
     }
+}
+
+class ExecutarArvores{
+
+    public Binario vetorBinario;
+
+    public MultipartFile arquivo;
+
+    public ExecutarArvores(MultipartFile arquivo, Binario vetor){
+        this.arquivo = arquivo;
+        this.vetorBinario = vetor;
+    }
+
+    void executarCarregamentoVetorBinario() throws IOException {
+        vetorBinario.vetorCru = Dados.carregarPalavrasEmVetor(arquivo);
+        vetorBinario.tempoLeituraArquivo = Tempo.formatarTempoEmString(Dados.tempoLeituraArquivo);
+        vetorBinario.executarBuscaBinariaAndInsercoes();
+    }
+
 }

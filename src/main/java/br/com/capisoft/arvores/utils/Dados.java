@@ -1,18 +1,18 @@
 package br.com.capisoft.arvores.utils;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
 import java.io.*;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Dados {
 
     List<String> listaPalavras;
+
+    public static long tempoLeituraArquivo = 0;
 
     public void adicionarTextoTeste(MultipartFile arquivo) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
@@ -21,6 +21,19 @@ public class Dados {
             System.out.println(line); // Print each line to the console
         }
         reader.close();
+    }
+
+    public static String[] carregarPalavrasEmVetor(MultipartFile arquivo) throws IOException {
+        long start = System.nanoTime();
+        BufferedReader br = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
+        String linha = "";
+        StringBuilder palavrasAux = new StringBuilder();
+        while((linha = br.readLine()) != null){
+            palavrasAux.append(linha).append(' ');
+        }
+        long stop = System.nanoTime();
+        tempoLeituraArquivo = (stop-start);
+        return palavrasAux.toString().split(" ");
     }
     
     public List<String> carregarListaDePalavras(MultipartFile arquivo) throws IOException {
