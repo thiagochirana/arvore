@@ -33,6 +33,18 @@ public class ArvoreController {
         return arvoresService.buscarArvores(id);
     }
 
+    @GetMapping("/buscarInfo")
+    public ResponseEntity buscarInformacoesAtuais(){
+        return arvoresService.obterInformacoes();
+    }
+
+    @PostMapping("/uploadTXT")
+    @Transactional
+    public ResponseEntity uploadArquivoTXT(MultipartFile txt) throws IOException {
+        LOG.info("Request recebida em arquivo");
+        return arvoresService.processarArquivoParaArvores(txt);
+    }
+
     @PostMapping("/simples/uploadTXT")
     @Transactional
     public ResponseEntity uploadArquivo(MultipartFile txt) throws IOException {
