@@ -35,28 +35,25 @@ public class Dados {
         tempoLeituraArquivo = (stop-start);
         return palavrasAux.toString().split(" ");
     }
-    
+
     public List<String> carregarListaDePalavras(MultipartFile arquivo) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(arquivo.getInputStream()));
         String line;
         List<String> lista = new ArrayList<>();
-        Pattern nonAlphanumeric = Pattern.compile("\\p{M}");
+        Pattern wordPattern = Pattern.compile("\\p{L}+"); // Palavras com acentos
 
         // Carregue as stopwords do arquivo
         Set<String> stopWords = carregarStopWords();
 
         while ((line = reader.readLine()) != null) {
             for (String s : line.split(" ")) {
-                // Remova caracteres não-alfanuméricos
-                String cleanedWord = nonAlphanumeric.matcher(s).replaceAll("");
+                String[] words = s.split("[^\\p{L}]+");
 
-                // Normalize a string para remover acentos
-                String normalizedWord = Normalizer.normalize(cleanedWord, Normalizer.Form.NFD);
-                String withoutAccentsWord = normalizedWord.replaceAll("\\p{M}", "").toLowerCase();
-
-                // Adicionar a palavra sem acento
-                if (!withoutAccentsWord.isEmpty() && !stopWords.contains(withoutAccentsWord.toLowerCase())) {
-                    lista.add(withoutAccentsWord); 
+                for (String word : words) {
+                    // Adicione a palavra original à lista
+                    if (!word.isEmpty() && !stopWords.contains(word.toLowerCase())) {
+                        lista.add(word.toLowerCase());
+                    }
                 }
             }
         }
