@@ -81,18 +81,24 @@ public class ArvoresService{
     private static Runnable adicionarEmArvoreAVL = new Runnable() {
         @Override
         public void run() {
+            long start = System.nanoTime();
             for (String palavraNode : vetorBinario.vetorTratado){
                 adicionarNaArvore(palavraNode.toLowerCase(),true);
             }
+            long stop = System.nanoTime();
+            arvoreAVLControl.getArvore().tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
         }
     };
 
     private static Runnable adicionarEmArvoreSimples = new Runnable() {
         @Override
         public void run() {
+            long start = System.nanoTime();
             for (String palavraNode : vetorBinario.vetorTratado){
                 adicionarNaArvore(palavraNode.toLowerCase(),false);
             }
+            long stop = System.nanoTime();
+            arvoreSimplesControl.getArvore().tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
         }
     };
 
@@ -194,6 +200,7 @@ public class ArvoresService{
     private static Arvore adicionarNaArvore(String textoNode, boolean isAVL){
         Node novoNode = new Node(textoNode);
         if (isAVL){
+
             if (arvoreAVLControl == null){
                 LOG.info("Arvore está vazia, vou iniciar ela com o root -> "+novoNode+ ", tipo será AVL.");
                 arvoreAVLControl = new ControleArvores(new Arvore(novoNode, true));
