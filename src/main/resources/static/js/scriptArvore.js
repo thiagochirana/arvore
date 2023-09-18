@@ -43,23 +43,27 @@ function renderTree (node) {
 }
 
 
-function mostrarArvore(arvoreJSON){
-    console.log(arvoreJSON)
-    let treeDOMElement = document.querySelector(".tree");
-    treeDOMElement.innerHTML = renderTree(arvoreJSON.raiz);
+function mostrarArvore(){
 
-    //Loop para exibir as palavras
-    for (let p of arvoreJSON.palavras){
-        mostrarFreqPalavras(p.palavra,p.quantidade)
+    if (dadosDaAPI.tempoDeExecucao == null){
+
+    } else {
+        let treeDOMElement = document.querySelector(".tree");
+        treeDOMElement.innerHTML = renderTree(arvoreJSON.raiz);
+
+        //Loop para exibir as palavras
+        for (let p of arvoreJSON.palavras) {
+            mostrarFreqPalavras(p.palavra, p.quantidade)
+        }
+        console.log(arvoreJSON.isAVL)
+        mostrarRelatorio(arvoreJSON.isAVL, arvoreJSON.rotacoes, arvoreJSON.comparacoes, arvoreJSON.tempoDeExecucao)
+
+        console.log("mostrando arvore");
+        document.querySelector(".arvore").classList.remove("hidden");
+        document.querySelector(".divDosBotoes").classList.add("hidden");
+        document.querySelector(".frequenciaPalavras").classList.remove("hidden");
+        document.querySelector(".contadoresArvore").classList.remove("hidden");
     }
-    console.log(arvoreJSON.isAVL)
-    mostrarRelatorio(arvoreJSON.isAVL, arvoreJSON.rotacoes, arvoreJSON.comparacoes, arvoreJSON.tempoDeExecucao)
-
-    console.log("mostrando arvore");
-    document.querySelector(".arvore").classList.remove("hidden");
-    document.querySelector(".divDosBotoes").classList.add("hidden");
-    document.querySelector(".frequenciaPalavras").classList.remove("hidden");
-    document.querySelector(".contadoresArvore").classList.remove("hidden");
 }
 
 function mostrarFreqPalavras(palavra, qte){

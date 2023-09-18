@@ -1,4 +1,5 @@
 let btnAVL = true;
+let dadosDaAPI;
 
 document.getElementById('uploadForm').addEventListener('submit', function (e) {
     try{
@@ -44,7 +45,7 @@ function request(url, method, formData){
                 }
             })
             .then((data) => {
-                mostrarArvore(data)
+                dadosDaAPI = data;
                 return data;
             })
     }
