@@ -43,26 +43,48 @@ function renderTree (node) {
 }
 
 
-function mostrarArvore(){
+function exibirArvore(){
+    request("http://localhost:8080/arvore/buscarInfo","GET",null);
 
-    if (dadosDaAPI.tempoDeExecucao == null){
+    console.log(dadosDaAPI)
 
+    let divTree = document.querySelector(".tree");
+    let h5 = document.createElement("h5");
+    h5.textContent = "Arquivo em processamento, por favor aguarde e tente novamente daqui a pouco..."
+
+    if (dadosDaAPI == null){
+        divTree.append(h5);
     } else {
-        let treeDOMElement = document.querySelector(".tree");
-        treeDOMElement.innerHTML = renderTree(arvoreJSON.raiz);
+        h5.remove();
+        if (btnAVL){
+            divTree.innerHTML = renderTree(dadosDaAPI.arvoreAVL.raizArvoreAVL);
+        } else {
+            divTree.innerHTML = renderTree(dadosDaAPI.arvoreBinaria.raizArvoreBinaria);
+        }
 
         //Loop para exibir as palavras
-        for (let p of arvoreJSON.palavras) {
+        for (let p of dadosDaAPI.frequenciaPalavras) {
             mostrarFreqPalavras(p.palavra, p.quantidade)
         }
-        console.log(arvoreJSON.isAVL)
-        mostrarRelatorio(arvoreJSON.isAVL, arvoreJSON.rotacoes, arvoreJSON.comparacoes, arvoreJSON.tempoDeExecucao)
+
+        mostrarRelatorioVetor(dadosDaAPI.vetorBinario.tempoExecucaoBuscaBinaria,
+                                dadosDaAPI.tempoLeituraArquivo,
+                                dadosDaAPI.vetorBinario.tempoOrdenacaoVetor,
+                                dadosDaAPI.vetorBinario.contadorComparacoesBinaria)
+
+        mostrarRelatorioBinario(dadosDaAPI.arvoreBinaria.comparacoes, dadosDaAPI.arvoreBinaria.tempoDeExecucao)
+
+        mostrarRelatorioAVL(dadosDaAPI.arvoreAVL.rotacoes,
+                            dadosDaAPI.arvoreAVL.comparacoes,
+                            dadosDaAPI.arvoreAVL.tempoDeExecucao)
 
         console.log("mostrando arvore");
         document.querySelector(".arvore").classList.remove("hidden");
         document.querySelector(".divDosBotoes").classList.add("hidden");
         document.querySelector(".frequenciaPalavras").classList.remove("hidden");
-        document.querySelector(".contadoresArvore").classList.remove("hidden");
+        document.querySelector(".arvoreAVL").classList.remove("hidden");
+        document.querySelector(".arvoreBinaria").classList.remove("hidden");
+        document.querySelector(".vetorBinario").classList.remove("hidden");
     }
 }
 
@@ -70,14 +92,25 @@ function mostrarFreqPalavras(palavra, qte){
     mostrarRows(palavra,qte,document.querySelector(".listaTable"))
 }
 
-function mostrarRelatorio(isAVL,rotacoes,comparacoes,tempoExecucao){
-    let body = document.querySelector(".dados")
-    if (isAVL){
-        mostrarRows("É AVL?","Sim",body)
-        mostrarRows("Rotações",rotacoes,body)
-    }
+function mostrarRelatorioAVL(rotacoes, comparacoes, tempoExecucao){
+    let body = document.querySelector(".dadosArvAVL");
+    mostrarRows("Rotacões",rotacoes,body)
     mostrarRows("Comparacões",comparacoes,body)
     mostrarRows("Tempo de Execução",tempoExecucao,body)
+}
+
+function mostrarRelatorioBinario(comparacoes, tempoExecucao){
+    let body = document.querySelector(".dadosArvBinario");
+    mostrarRows("Comparacões",comparacoes,body)
+    mostrarRows("Tempo de Execução",tempoExecucao,body)
+}
+
+function mostrarRelatorioVetor(tempoExecucao, tempoLeitura, tempoOrdenacao, comparacoesBusca){
+    let body = document.querySelector(".dadosVetorBinario");
+    mostrarRows("Tempo de Execução Busca Binária",tempoExecucao,body)
+    mostrarRows("Tempo de leitura arquivo",tempoLeitura,body)
+    mostrarRows("Tempo de ordenação do vetor",tempoOrdenacao,body)
+    mostrarRows("Comparações busca binária",comparacoesBusca,body)
 }
 
 

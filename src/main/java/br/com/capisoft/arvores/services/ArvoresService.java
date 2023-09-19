@@ -29,6 +29,10 @@ public class ArvoresService{
     private Tempo tempo = new Tempo();
     private Busca busca = new Busca();
 
+    private static boolean terminouProcessAVL = false;
+
+    private static boolean terminouProcessBinario = false;
+
     private static Binario vetorBinario = new Binario();
 
     private static ControleArvores arvoreSimplesControl;
@@ -55,10 +59,10 @@ public class ArvoresService{
 
     public ResponseEntity obterInformacoes(){
         LOG.info("Obtendo informaçoes gerais de carregamento e enviar ao cliente");
-        try {
+        if (terminouProcessAVL && terminouProcessBinario){
             return ResponseEntity.ok(GerarDTO.dasInformacoesTotais(vetorBinario, arvoreSimplesControl.getArvore(), arvoreAVLControl.getArvore()));
-        } catch (NullPointerException e){
-            return ResponseEntity.unprocessableEntity().body("Ainda em processamento dos dados, por favor aguarde");
+        } else {
+            return ResponseEntity.status(102).body("Ainda em processamento dos dados, por favor aguarde");
         }
     }
 
@@ -87,6 +91,7 @@ public class ArvoresService{
             }
             long stop = System.nanoTime();
             arvoreAVLControl.getArvore().tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
+            terminouProcessAVL = true;
         }
     };
 
@@ -99,6 +104,7 @@ public class ArvoresService{
             }
             long stop = System.nanoTime();
             arvoreSimplesControl.getArvore().tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
+            terminouProcessBinario = true;
         }
     };
 
