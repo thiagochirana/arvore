@@ -79,6 +79,7 @@ public class ArvoresService{
             }
             new Thread(adicionarEmArvoreAVL).start();
             new Thread(adicionarEmArvoreSimples).start();
+            arvoreSimplesControl.getArvore().comparacoes = arvoreAVLControl.getArvore().comparacoes = vetorBinario.contadorComparacoesBinaria;
         }
     };
 
@@ -193,6 +194,7 @@ public class ArvoresService{
     }
 
     public ResponseEntity deletarArvores(){
+        vetorBinario.zerarContadores();
         arvoreAVLControl = null;
         arvoreSimplesControl = null;
         arvores.deleteAll();

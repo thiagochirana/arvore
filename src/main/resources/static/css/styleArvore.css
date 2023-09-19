@@ -1,6 +1,6 @@
 .body-content{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     padding: 5vh;
 }
 
@@ -46,29 +46,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 20px;
+    margin: 0 4px;
     position: relative;
 }
 
 .node:not(.node--root) > .node__element::before {
     content: '';
-    height: 20px;
+    height: 10px;
     width: 1px;
     background-color: #dcdcdc;
     display: block;
     position: absolute;
     left: 0;
     right: 0;
-    top: -20px;
+    top: -10px;
     margin: auto;
 }
 
 .node.node--left {
-    margin-right: 10px;
+    margin-right: 2px;
 }
 
 .node.node--right {
-    margin-left: 10px;
+    margin-left: 2px;
 }
 
 .node__element {
@@ -80,7 +80,7 @@
     min-width: 60px;
     max-width: max-content;
 
-    padding: 4px 8px;
+    padding: 1px;
     font-size: 12px;
     line-height: 32px;
     text-align: center;
@@ -101,7 +101,7 @@
 
 .node__children {
     display: flex;
-    padding: 20px 0;
+    padding: 10px 0;
     border-top: 1px solid #dcdcdc;
 }
 

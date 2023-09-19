@@ -1,4 +1,4 @@
-
+let exibiuRelatorio = false;
 function renderTree (node) {
     if (node === null || typeof node !== 'object') {
         return '';
@@ -57,8 +57,10 @@ function exibirArvore(){
     } else {
         h5.remove();
         if (btnAVL){
+            console.log(dadosDaAPI.arvoreAVL.raizArvoreAVL)
             divTree.innerHTML = renderTree(dadosDaAPI.arvoreAVL.raizArvoreAVL);
         } else {
+            console.log(dadosDaAPI.arvoreBinaria.raizArvoreBinaria)
             divTree.innerHTML = renderTree(dadosDaAPI.arvoreBinaria.raizArvoreBinaria);
         }
 
@@ -67,16 +69,19 @@ function exibirArvore(){
             mostrarFreqPalavras(p.palavra, p.quantidade)
         }
 
-        mostrarRelatorioVetor(dadosDaAPI.vetorBinario.tempoExecucaoBuscaBinaria,
-                                dadosDaAPI.tempoLeituraArquivo,
-                                dadosDaAPI.vetorBinario.tempoOrdenacaoVetor,
-                                dadosDaAPI.vetorBinario.contadorComparacoesBinaria)
+        if (!exibiuRelatorio){
+            mostrarRelatorioVetor(dadosDaAPI.vetorBinario.tempoExecucaoBuscaBinaria,
+                dadosDaAPI.tempoLeituraArquivo,
+                dadosDaAPI.vetorBinario.tempoOrdenacaoVetor,
+                dadosDaAPI.vetorBinario.contadorComparacoesBinaria)
 
-        mostrarRelatorioBinario(dadosDaAPI.arvoreBinaria.comparacoes, dadosDaAPI.arvoreBinaria.tempoDeExecucao)
+            mostrarRelatorioBinario(dadosDaAPI.arvoreBinaria.comparacoes, dadosDaAPI.arvoreBinaria.tempoDeExecucao)
 
-        mostrarRelatorioAVL(dadosDaAPI.arvoreAVL.rotacoes,
-                            dadosDaAPI.arvoreAVL.comparacoes,
-                            dadosDaAPI.arvoreAVL.tempoDeExecucao)
+            mostrarRelatorioAVL(dadosDaAPI.arvoreAVL.rotacoes,
+                dadosDaAPI.arvoreAVL.comparacoes,
+                dadosDaAPI.arvoreAVL.tempoDeExecucao)
+            exibiuRelatorio = true;
+        }
 
         console.log("mostrando arvore");
         document.querySelector(".arvore").classList.remove("hidden");
