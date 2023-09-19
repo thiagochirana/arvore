@@ -23,7 +23,7 @@ public class Binario {
 
     public int contadorComparacoesBinaria = 0;
 
-    private Map<String, Integer> frequenciaDePalavras;
+    public Map<String, Integer> frequenciaDePalavras;
 
     private static Logger LOG = LoggerFactory.getLogger(Binario.class);
 
@@ -114,5 +114,13 @@ public class Binario {
 
     public Map<String, Integer> getFrequenciaDePalavras() {
         return this.frequenciaDePalavras;
+    }
+
+    public void zerarContadores(){
+        frequenciaDePalavras = new HashMap<>();
+        tempoLeituraArquivo = null;
+        contadorComparacoesBinaria = 0;
+        tempoOrdenacaoVetor = 0;
+        tempoExecucaoBuscaBinaria = 0;
     }
 }

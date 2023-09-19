@@ -29,6 +29,10 @@ public class ArvoresService{
     private Tempo tempo = new Tempo();
     private Busca busca = new Busca();
 
+    private static boolean terminouProcessAVL = false;
+
+    private static boolean terminouProcessBinario = false;
+
     private static Binario vetorBinario = new Binario();
 
     private static ControleArvores arvoreSimplesControl;
@@ -55,10 +59,10 @@ public class ArvoresService{
 
     public ResponseEntity obterInformacoes(){
         LOG.info("Obtendo informaçoes gerais de carregamento e enviar ao cliente");
-        try {
+        if (terminouProcessAVL && terminouProcessBinario){
             return ResponseEntity.ok(GerarDTO.dasInformacoesTotais(vetorBinario, arvoreSimplesControl.getArvore(), arvoreAVLControl.getArvore()));
-        } catch (NullPointerException e){
-            return ResponseEntity.unprocessableEntity().body("Ainda em processamento dos dados, por favor aguarde");
+        } else {
+            return ResponseEntity.status(102).body("Ainda em processamento dos dados, por favor aguarde");
         }
     }
 
@@ -75,24 +79,33 @@ public class ArvoresService{
             }
             new Thread(adicionarEmArvoreAVL).start();
             new Thread(adicionarEmArvoreSimples).start();
+            arvoreSimplesControl.getArvore().comparacoes = arvoreAVLControl.getArvore().comparacoes = vetorBinario.contadorComparacoesBinaria;
         }
     };
 
     private static Runnable adicionarEmArvoreAVL = new Runnable() {
         @Override
         public void run() {
+            long start = System.nanoTime();
             for (String palavraNode : vetorBinario.vetorTratado){
                 adicionarNaArvore(palavraNode.toLowerCase(),true);
             }
+            long stop = System.nanoTime();
+            arvoreAVLControl.getArvore().tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
+            terminouProcessAVL = true;
         }
     };
 
     private static Runnable adicionarEmArvoreSimples = new Runnable() {
         @Override
         public void run() {
+            long start = System.nanoTime();
             for (String palavraNode : vetorBinario.vetorTratado){
                 adicionarNaArvore(palavraNode.toLowerCase(),false);
             }
+            long stop = System.nanoTime();
+            arvoreSimplesControl.getArvore().tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
+            terminouProcessBinario = true;
         }
     };
 
@@ -181,6 +194,7 @@ public class ArvoresService{
     }
 
     public ResponseEntity deletarArvores(){
+        vetorBinario.zerarContadores();
         arvoreAVLControl = null;
         arvoreSimplesControl = null;
         arvores.deleteAll();
@@ -194,6 +208,7 @@ public class ArvoresService{
     private static Arvore adicionarNaArvore(String textoNode, boolean isAVL){
         Node novoNode = new Node(textoNode);
         if (isAVL){
+
             if (arvoreAVLControl == null){
                 LOG.info("Arvore está vazia, vou iniciar ela com o root -> "+novoNode+ ", tipo será AVL.");
                 arvoreAVLControl = new ControleArvores(new Arvore(novoNode, true));

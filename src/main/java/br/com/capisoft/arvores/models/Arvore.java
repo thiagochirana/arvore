@@ -36,7 +36,7 @@ public class Arvore {
     public int rotacoes = 0;
 
     @Transient
-    public String tempoDeExecucao = "";
+    public String tempoDeExecucao;
 
 
     public Arvore(Node root) {

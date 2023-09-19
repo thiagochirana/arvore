@@ -36,6 +36,7 @@ public class GerarDTO {
     public static ArvoreBinariaDTO daArvoreBinaria(Arvore binaria){
         return new ArvoreBinariaDTO(
                 binaria.comparacoes,
+                binaria.tempoDeExecucao,
                 gerarDTO(binaria.getRoot())
         );
     }
@@ -44,6 +45,7 @@ public class GerarDTO {
         return new ArvoreAVLDTO(
                 avl.comparacoes,
                 avl.rotacoes,
+                avl.tempoDeExecucao,
                 gerarDTO(avl.getRoot())
         );
     }

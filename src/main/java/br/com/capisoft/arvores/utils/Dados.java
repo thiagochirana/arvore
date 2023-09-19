@@ -8,6 +8,8 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static java.util.Collections.replaceAll;
+
 public class Dados {
 
     List<String> listaPalavras;
@@ -29,11 +31,12 @@ public class Dados {
         String linha = "";
         StringBuilder palavrasAux = new StringBuilder();
         while((linha = br.readLine()) != null){
-            palavrasAux.append(linha).append(' ');
+            String linhaSemAcento = removerAcentos(linha);
+            palavrasAux.append(linhaSemAcento).append(" ");
         }
         long stop = System.nanoTime();
         tempoLeituraArquivo = (stop-start);
-        return palavrasAux.toString().split(" ");
+        return palavrasAux.toString().replaceAll("[^a-zA-Z0-9 ]", "").split(" ");
     }
 
     public List<String> carregarListaDePalavras(MultipartFile arquivo) throws IOException {
@@ -87,5 +90,11 @@ public class Dados {
 
     public boolean listaEstaVazia(){
         return this.listaPalavras != null;
+    }
+
+    public static String removerAcentos(String texto) {
+        texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        texto = texto.replaceAll("[^\\p{ASCII}]", "");
+        return texto;
     }
 }

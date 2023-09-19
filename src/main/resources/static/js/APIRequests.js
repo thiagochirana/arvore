@@ -1,17 +1,15 @@
 let btnAVL = true;
+let dadosDaAPI = null;
 
 document.getElementById('uploadForm').addEventListener('submit', function (e) {
     try{
         e.preventDefault();
-        let url = 'http://localhost:8080/arvore/simples/uploadTXT';
-        if (btnAVL){
-            url = 'http://localhost:8080/arvore/avl/uploadTXT';
-        }
         const arquivo = document.getElementById('file').files[0];
         const formData = new FormData();
         formData.append('txt',arquivo,'texto.txt');
 
-        request(url,'POST',formData)
+        document.querySelector(".btnNavTipoArvore").classList.remove("hidden");
+        request('http://localhost:8080/arvore/uploadTXT','POST',formData)
     } catch (e){
         alert(e);
     }
@@ -20,7 +18,7 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
 
 function request(url, method, formData){
     console.log("VOU REQUISITAR A URL ",url)
-    if (method == "DELETE"){
+    if (method === "DELETE"){
         fetch(url, {
             method: method
         })
@@ -32,10 +30,18 @@ function request(url, method, formData){
                 }
             })
     } else {
-        fetch(url, {
-            method: method,
-            body: formData
-        })
+        let init;
+        if (formData == null){
+            init = {
+                method: method
+            }
+        } else {
+            init = {
+                method: method,
+                body: formData
+            }
+        }
+        fetch(url, init)
             .then((resposta) => {
                 if (resposta.ok) {
                     return resposta.json();
@@ -44,7 +50,7 @@ function request(url, method, formData){
                 }
             })
             .then((data) => {
-                mostrarArvore(data)
+                dadosDaAPI = data;
                 return data;
             })
     }
