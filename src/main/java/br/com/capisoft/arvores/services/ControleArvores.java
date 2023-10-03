@@ -27,11 +27,11 @@ public class ControleArvores {
             LOG.info("Arvore está vazia, vou adicionar nova arvore com o root ->"+node.toString());
             arvore.setRoot(node);
         } else {
-            //Aqui realiza a busca na árvore se tal node já está presente na árvore, se sim apenas acrescenta na contagem de vetorPalavras, se não então insere na árvore
+            //Aqui realiza a busca na árvore se tal node já está presente na árvore, se sim apenas acrescenta na contagem de vetorElementos, se não então insere na árvore
             LOG.info("Vou iniciar uma Busca Binária na "+arvore.toString()+" e verificar se contém o Node "+node.getPalavra().toUpperCase());
             Node no = busca.binariaDaArvore(arvore,node.getPalavra());
             if(no != null){
-                LOG.info("Node com texto "+node.getPalavra().toUpperCase()+" foi encontrado na árvore, logo, não irei preencher, apenas adicionar a contagem de vetorPalavras");
+                LOG.info("Node com texto "+node.getPalavra().toUpperCase()+" foi encontrado na árvore, logo, não irei preencher, apenas adicionar a contagem de vetorElementos");
             } else {
                 LOG.info("Vou adicionar o node pois foi verificado que o mesmo não foi encontrado na árvore -> "+node.toString());
                 arvore.setRoot(inserirNo(arvore.getRoot(), node.getPalavra().toLowerCase()));
@@ -55,7 +55,7 @@ public class ControleArvores {
             } else if (res < 0) {
                 node.direita = inserirNo(node.direita, palavra);
             } else {
-                LOG.info("O novo node "+palavra+" já está na arvore, vou adicionar a contagem de vetorPalavras");
+                LOG.info("O novo node "+palavra+" já está na arvore, vou adicionar a contagem de vetorElementos");
                 arvore.adicionarNaListaDePalavras(palavra);
             }
         }

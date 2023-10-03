@@ -2,20 +2,20 @@ package br.com.capisoft.arvores.models;
 
 import java.util.Objects;
 
-public class ElementoNodeB {
+public class Elemento {
 
-    public NodeB paiNode;
+    public Pagina paginaResidente;
 
     public String palavra;
 
-    public ElementoNodeB(NodeB paiNode, String palavra){
-        this.paiNode = paiNode;
+    public Elemento(Pagina paginaResidente, String palavra){
+        this.paginaResidente = paginaResidente;
         this.palavra = palavra;
     }
 
     public boolean temElementoAEsquerda(){
         int cont = 0;
-        for(ElementoNodeB e : paiNode.vetorPalavras){
+        for(Elemento e : paginaResidente.vetorElementos){
             if (this.equals(e)){
                 break;
             } else {
@@ -31,9 +31,9 @@ public class ElementoNodeB {
 
     public boolean temElementoADireita(){
         boolean temDireita = false;
-        for(int i = 0; i < paiNode.vetorPalavras.length ; i++){
-            if (paiNode.vetorPalavras[i] != null && this.equals(paiNode.vetorPalavras[i])){
-                if (paiNode.vetorPalavras[i+1] != null){
+        for(int i = 0; i < paginaResidente.vetorElementos.length ; i++){
+            if (paginaResidente.vetorElementos[i] != null && this.equals(paginaResidente.vetorElementos[i])){
+                if (paginaResidente.vetorElementos[i+1] != null){
                     temDireita = true;
                     break;
                 }
@@ -42,16 +42,20 @@ public class ElementoNodeB {
         return temDireita;
     }
 
+    public boolean isPrimeiroDaPagina(){
+        return paginaResidente.vetorElementos[0].equals(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ElementoNodeB that = (ElementoNodeB) o;
-        return Objects.equals(paiNode, that.paiNode) && Objects.equals(palavra, that.palavra);
+        Elemento that = (Elemento) o;
+        return Objects.equals(paginaResidente, that.paginaResidente) && Objects.equals(palavra, that.palavra);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(paiNode, palavra);
+        return Objects.hash(paginaResidente, palavra);
     }
 }

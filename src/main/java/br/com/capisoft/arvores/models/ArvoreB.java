@@ -2,37 +2,35 @@ package br.com.capisoft.arvores.models;
 
 public class ArvoreB {
 
-    public NodeB raiz;
+    public Pagina raiz;
 
     public int ordem;
 
     public int qtdeElementos;
 
     public ArvoreB(int ordem){
-        this.raiz = new NodeB(ordem - 1);
+        this.raiz = new Pagina(ordem - 1);
         this.ordem = ordem;
         qtdeElementos = 0;
     }
 
     public void inserirElemento(String palavra){
-        NodeB no = buscarElemento(raiz, palavra);
+        Pagina no = buscarElemento(raiz, palavra);
         if (no == null){
             inserir(raiz, palavra);
         }
     }
 
-    private ElementoNodeB inserir(NodeB node, String palavra){
-        if (node == null){
+    private Elemento inserir(Pagina pagina, String palavra){
+        if (pagina == null){
             return null;
         }
 
-        for (ElementoNodeB elem : node.vetorPalavras){
+        for (Elemento elem : pagina.vetorElementos){
             int c = elem.palavra.compareToIgnoreCase(palavra);
 
             if (c < 0){
-                if (!elem.temElementoAEsquerda()){
 
-                }
             } else if (c > 0){
 
             } else {
@@ -40,28 +38,32 @@ public class ArvoreB {
             }
         }
 
-        if (node.qtdeElementosPreenchidos < node.vetorPalavras.length-1){
-            node.vetorPalavras[node.qtdeElementosPreenchidos +1].palavra = palavra;
-            node.qtdeElementosPreenchidos++;
+        if (pagina.qtdeElementosPreenchidos < pagina.vetorElementos.length-1){
+            pagina.vetorElementos[pagina.qtdeElementosPreenchidos +1].palavra = palavra;
+            pagina.qtdeElementosPreenchidos++;
         }
     }
 
-    public NodeB buscarElemento(NodeB node, String palavra){
-        if (node == null || palavra == null){
+    public void rebalancearPagina(Pagina pagina){
+
+    }
+
+    public Pagina buscarElemento(Pagina pagina, String palavra){
+        if (pagina == null || palavra == null){
             return null;
         }
         int posFilho = 0;
-        for(ElementoNodeB elem : node.vetorPalavras){
+        for(Elemento elem : pagina.vetorElementos){
             int i = elem.palavra.compareToIgnoreCase(palavra);
 
             if (elem.palavra.equalsIgnoreCase(palavra)){
-                return node;
+                return pagina;
             } else if (i > 0){
                 posFilho++;
             }
         }
-        if (node.nodes[posFilho] != null){
-            buscarElemento(node.nodes[posFilho], palavra);
+        if (pagina.paginasFilho[posFilho] != null){
+            buscarElemento(pagina.paginasFilho[posFilho], palavra);
         } else {
             return null;
         }

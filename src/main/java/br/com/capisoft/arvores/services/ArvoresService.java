@@ -199,7 +199,7 @@ public class ArvoresService{
         arvoreSimplesControl = null;
         arvores.deleteAll();
         nodes.deleteAll();
-        LOG.info("Deletado todos os nodes e árvores salvos");
+        LOG.info("Deletado todos os paginasFilho e árvores salvos");
         return ResponseEntity.ok("Todas as arvores foram excluídas");
     }
 
