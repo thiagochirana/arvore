@@ -24,7 +24,7 @@ public class ArvoreBControle {
 
     private Elemento busca(Pagina pagina, String palavra){
         if (pagina == null){
-            
+
         }
     }
 
