@@ -45,7 +45,17 @@ public class ArvoreB {
     }
 
     public void rebalancearPagina(Pagina pagina){
+        if (pagina.paginaPai != null){
+            if (pagina.contemFilhos()){
+                if (pagina.necessitaDivisao()){
+                    if (pagina.paginaPai.necessitaDivisao()){
+                        rebalancearPagina(pagina.paginaPai);
+                    } else {
 
+                    }
+                }
+            }
+        }
     }
 
     public Pagina buscarElemento(Pagina pagina, String palavra){
