@@ -4,8 +4,6 @@ public class Pagina {
 
     public Elemento[] vetorElementos;
 
-    public Pagina[] paginasFilho;
-
     public Pagina paginaPai;
 
     public boolean isFolha;
@@ -14,7 +12,6 @@ public class Pagina {
 
     public Pagina(int qtdeTotalElemento){
         this.vetorElementos = new Elemento[qtdeTotalElemento];
-        this.paginasFilho = new Pagina[qtdeTotalElemento+1];
         this.isFolha = true;
         this.qtdeElementosPreenchidos = 0;
     }
@@ -29,20 +26,12 @@ public class Pagina {
         this.paginaPai = paginaPai;
     }
 
-    public boolean necessitaDivisao(){
+    public boolean precisaDividir(){
         int cont = 0;
         for (Elemento el : vetorElementos){
             cont++;
         }
         return cont > vetorElementos.length / 2;
-    }
-
-    public boolean contemFilhos(){
-        int cont = 0;
-        for (Pagina p : paginasFilho){
-            cont++;
-        }
-        return cont > 0;
     }
 
 }

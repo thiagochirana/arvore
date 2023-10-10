@@ -4,6 +4,8 @@ public class ArvoreB {
 
     public Pagina raiz;
 
+    public boolean isBMais;
+
     public int ordem;
 
     public int qtdeElementos;
@@ -11,73 +13,64 @@ public class ArvoreB {
     public ArvoreB(int ordem){
         this.raiz = new Pagina(ordem - 1);
         this.ordem = ordem;
+        this.isBMais = false;
         qtdeElementos = 0;
     }
 
     public void inserirElemento(String palavra){
-        Pagina no = buscarElemento(raiz, palavra);
-        if (no == null){
-            inserir(raiz, palavra);
-        }
+
     }
 
     private Elemento inserir(Pagina pagina, String palavra){
-        if (pagina == null){
-            return null;
-        }
-
-        for (Elemento elem : pagina.vetorElementos){
-            int c = elem.palavra.compareToIgnoreCase(palavra);
-
-            if (c < 0){
-
-            } else if (c > 0){
-
-            } else {
+        for(Elemento el : pagina.vetorElementos){
+            if (el == null){
 
             }
         }
-
-        if (pagina.qtdeElementosPreenchidos < pagina.vetorElementos.length-1){
-            pagina.vetorElementos[pagina.qtdeElementosPreenchidos +1].palavra = palavra;
-            pagina.qtdeElementosPreenchidos++;
-        }
+        //TODO consertar essa bullshit aqui
+        return new Elemento(pagina,palavra);
     }
 
-    public void rebalancearPagina(Pagina pagina){
-        if (pagina.paginaPai != null){
-            if (pagina.contemFilhos()){
-                if (pagina.necessitaDivisao()){
-                    if (pagina.paginaPai.necessitaDivisao()){
-                        rebalancearPagina(pagina.paginaPai);
-                    } else {
+    private void inserirOrganizar(Pagina pagina, Elemento elemento, int posicao){
+        if (posicao > pagina.vetorElementos.length){
+            return;
+        }
+        if (pagina.vetorElementos[posicao] != null){
+            for (int i = posicao ; i < pagina.vetorElementos.length ; i++){
+                Elemento atual = pagina.vetorElementos[i];
+                Elemento nextAtual = pagina.vetorElementos[i].obterIrmaoDireita();
 
-                    }
+                pagina.vetorElementos[i] = elemento;
+                pagina.vetorElementos[i+1] = atual;
+                if (i+2 >= pagina.vetorElementos.length){
+                    pagina.vetorElementos[i+2] = nextAtual;
                 }
             }
         }
+
     }
 
-    public Pagina buscarElemento(Pagina pagina, String palavra){
-        if (pagina == null || palavra == null){
-            return null;
+    private void removerElemento(Elemento elemento){
+        if (elemento.paginaResidente == null){
+            return;
         }
-        int posFilho = 0;
-        for(Elemento elem : pagina.vetorElementos){
-            int i = elem.palavra.compareToIgnoreCase(palavra);
 
-            if (elem.palavra.equalsIgnoreCase(palavra)){
-                return pagina;
-            } else if (i > 0){
-                posFilho++;
+        for (int i = 0 ; i < elemento.paginaResidente.vetorElementos.length ; i++){
+            if (elemento.paginaResidente.vetorElementos[i].equals(elemento)){
+                elemento.paginaResidente.vetorElementos[i] = null;
+                break;
             }
         }
-        if (pagina.paginasFilho[posFilho] != null){
-            buscarElemento(pagina.paginasFilho[posFilho], palavra);
-        } else {
-            return null;
+        for (int i = 0 ; i < elemento.paginaResidente.vetorElementos.length ; i++){
+            if (elemento.paginaResidente.vetorElementos[i] == null){
+                Elemento next = elemento.paginaResidente.vetorElementos[i].obterIrmaoDireita();
+                Elemento atual = elemento.paginaResidente.vetorElementos[i];
+                if (!(elemento.paginaResidente.vetorElementos.length >= i+1)){
+                    elemento.paginaResidente.vetorElementos[i+1] = atual;
+                }
+                elemento.paginaResidente.vetorElementos[i] = next;
+            }
         }
-        return null;
     }
 
 }

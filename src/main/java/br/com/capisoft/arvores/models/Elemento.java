@@ -42,6 +42,19 @@ public class Elemento {
         return temDireita;
     }
 
+    public Elemento obterIrmaoDireita(){
+        for (int i = 0 ; i < paginaResidente.vetorElementos.length ; i++){
+            if (paginaResidente.vetorElementos[i].equals(this)){
+                if( i+1 >= paginaResidente.vetorElementos.length ){
+                    return null;
+                } else {
+                    return paginaResidente.vetorElementos[i+1];
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean isPrimeiroDaPagina(){
         return paginaResidente.vetorElementos[0].equals(this);
     }
