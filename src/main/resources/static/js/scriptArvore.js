@@ -81,6 +81,9 @@ function exibirArvore(){
                 dadosDaAPI.arvoreAVL.comparacoes,
                 dadosDaAPI.arvoreAVL.tempoDeExecucao)
             exibiuRelatorio = true;
+
+            mostrarRelatorioArvoreB(dadosDaAPI.arvoreB.comparacoes, dadosDaAPI.arvoreB.tempoDeExecucao)
+            mostrarRelatorioArvoreBPlus(dadosDaAPI.arvoreBPlus.comparacoes, dadosDaAPI.arvoreBPlus.tempoDeExecucao)
         }
 
         console.log("mostrando arvore");
@@ -90,6 +93,8 @@ function exibirArvore(){
         document.querySelector(".arvoreAVL").classList.remove("hidden");
         document.querySelector(".arvoreBinaria").classList.remove("hidden");
         document.querySelector(".vetorBinario").classList.remove("hidden");
+        document.querySelector(".arvoreB").classList.remove("hidden");
+        document.querySelector(".arvoreBPlus").classList.remove("hidden");
     }
 }
 
@@ -116,6 +121,18 @@ function mostrarRelatorioVetor(tempoExecucao, tempoLeitura, tempoOrdenacao, comp
     mostrarRows("Tempo de leitura arquivo",tempoLeitura,body)
     mostrarRows("Tempo de ordenação do vetor",tempoOrdenacao,body)
     mostrarRows("Comparações busca binária",comparacoesBusca,body)
+}
+
+function mostrarRelatorioArvoreB(comparacoes, tempoDeExecucao){
+    let body = document.querySelector(".dadosArvoreB");
+    mostrarRows("Tempo de Execução Arvore B", tempoDeExecucao, body)
+    mostrarRows("Comparações Arvore B", comparacoes, body)
+}
+
+function mostrarRelatorioArvoreBPlus(comparacoes, tempoDeExecucao){
+    let body = document.querySelector(".dadosArvoreBPlus");
+    mostrarRows("Tempo de Execução Arvore B+", tempoDeExecucao, body)
+    mostrarRows("Comparações Arvore B+", comparacoes, body)
 }
 
 
