@@ -62,27 +62,27 @@ public class ArvoreB {
         }
     }
     //Metodo de Inserção
-    public void insert(int key) {
-        Node r = root;
-        // Verifica se o nó raiz r está cheio, Se ele tem o número máximo de chaves (2*t - 1).
-        if (r.n == 2 * t - 1) {
+    public void insert(int palavra) {
+        Node raiz = root;
+        // Verifica se o nó raiz raiz está cheio, Se ele tem o número máximo de chaves (2*t - 1).
+        if (raiz.n == 2 * t - 1) {
             // Se estiver cheia cria um novo Nó
-            Node s = new Node();
+            Node no = new Node();
             // Referencia da nova raiz 
-            root = s;
+            root = no;
             // O nó raiz anterior R torna-se o primeiro filho do novo nó raiz 
-            s.children[0] = r;
+            no.children[0] = raiz;
             /* Dividir o nó filho que está cheio (neste caso, o antigo nó raiz). 
             Isso garante que a propriedade da árvore B de ter um nó não cheio antes 
             da inserção seja mantida.*/
-            splitChild(s, 0);
+            splitChild(no, 0);
             /*Agora que a raiz não está mais cheia (porque foi dividida), a chave é inserida 
-            começando pelo novo nó raiz s usando o método */
-            insertNonFull(s, key);} 
+            começando pelo novo nó raiz no usando o método */
+            insertNonFull(no, palavra);}
         /*Se o nó não estiver cheio, a chave é inserida diretamente começando 
-        pelo nó raiz r usando o método*/
+        pelo nó raiz raiz usando o método*/
         else {
-            insertNonFull(r, key);}
+            insertNonFull(raiz, palavra);}
     }
 
     /* Método crucial na inserção de uma chave em uma árvore B. 
