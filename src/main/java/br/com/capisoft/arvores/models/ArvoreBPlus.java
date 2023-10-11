@@ -40,13 +40,17 @@ public class ArvoreBPlus {
     }
 
     private void inserirNaFolha(NoBPlus folha, String valor) {
-        int i = folha.numChaves - 1;
-        while (i >= 0 && valor.compareTo(folha.valores[i]) < 0) {
-            folha.valores[i + 1] = folha.valores[i];
-            i--;
+        try{
+            int i = folha.numChaves - 1;
+            while (i >= 0 && valor.compareTo(folha.valores[i]) < 0) {
+                folha.valores[i + 1] = folha.valores[i];
+                i--;
+            }
+            folha.valores[i + 1] = valor;
+            folha.numChaves++;
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
-        folha.valores[i + 1] = valor;
-        folha.numChaves++;
     }
 
 
