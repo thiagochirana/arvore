@@ -5,7 +5,7 @@ Tabelas de conteúdo
 >* [Árvore B e B+](#arvorebeb) - Estruturas de dados hierárquicas que permite armazenar mais de um registro!
 >* [Árvore AVL](#arvoreavl) -  É uma árvore binária na qual as alturas das duas subárvores de todo nó nunca difere em mais de 1!
 >* [Árvore Binária](#arvorebinaria) - É uma estrutura de dados útil quando precisam ser tomadas decisões bidirecionais em cada ponto de um processo!
->* [Rubo Negra](#arovrerubonegra) - Árvore binária de busca ditas balanceadas com altura O(logn)!
+>* [Rubo Negra](#arvorerubonegra) - Árvore binária de busca ditas balanceadas com altura O(logn)!
 
 *******
 
