@@ -1,9 +1,6 @@
 package br.com.capisoft.arvores.models.DTOs;
 
-import br.com.capisoft.arvores.models.Arvore;
-import br.com.capisoft.arvores.models.Binario;
-import br.com.capisoft.arvores.models.Node;
-import br.com.capisoft.arvores.models.Palavra;
+import br.com.capisoft.arvores.models.*;
 import br.com.capisoft.arvores.services.Tempo;
 
 import java.util.ArrayList;
@@ -23,14 +20,24 @@ public class GerarDTO {
         );
     }
 
-    public static InformacoesDTO dasInformacoesTotais(Binario vetorBin, Arvore binaria, Arvore avl){
+    public static InformacoesDTO dasInformacoesTotais(Binario vetorBin, Arvore binaria, Arvore avl, ArvoreB arvoreB, ArvoreBPlus arvoreBPlus){
         return new InformacoesDTO(
                 vetorBin.tempoLeituraArquivo,
                 frequenciaDePalavras(vetorBin.getFrequenciaDePalavras()),
                 doVetor(vetorBin),
                 daArvoreBinaria(binaria),
-                daArvoreAVL(avl)
+                daArvoreAVL(avl),
+                daArvoreB(arvoreB),
+                daArvoreBPlus(arvoreBPlus)
         );
+    }
+
+    public static ArvoreBDTO daArvoreB(ArvoreB arvoreB){
+        return new ArvoreBDTO(arvoreB.comparacoes, arvoreB.tempoDeExecucao);
+    }
+
+    public static ArvoreBPlusDTO daArvoreBPlus(ArvoreBPlus arvoreBPlus){
+        return new ArvoreBPlusDTO(arvoreBPlus.comparacoes, arvoreBPlus.tempoDeExecucao);
     }
 
     public static ArvoreBinariaDTO daArvoreBinaria(Arvore binaria){

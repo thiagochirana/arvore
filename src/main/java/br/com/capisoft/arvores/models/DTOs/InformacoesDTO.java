@@ -10,7 +10,11 @@ public record InformacoesDTO(
 
         ArvoreBinariaDTO arvoreBinaria,
 
-        ArvoreAVLDTO arvoreAVL
+        ArvoreAVLDTO arvoreAVL,
+
+        ArvoreBDTO arvoreB,
+
+        ArvoreBPlusDTO arvoreBPlus
 
 ) {
 }

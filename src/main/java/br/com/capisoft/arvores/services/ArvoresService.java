@@ -1,10 +1,8 @@
 package br.com.capisoft.arvores.services;
 
-import br.com.capisoft.arvores.models.Arvore;
-import br.com.capisoft.arvores.models.Binario;
+import br.com.capisoft.arvores.models.*;
 import br.com.capisoft.arvores.models.DTOs.BuscaResultadoDTO;
 import br.com.capisoft.arvores.models.DTOs.GerarDTO;
-import br.com.capisoft.arvores.models.Node;
 import br.com.capisoft.arvores.repositories.ArvoreRepository;
 import br.com.capisoft.arvores.repositories.NodeRepository;
 import br.com.capisoft.arvores.utils.Dados;
@@ -17,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ArvoresService{
@@ -39,6 +38,10 @@ public class ArvoresService{
 
     private static ControleArvores arvoreAVLControl;
 
+    private static ArvoreB arvoreB;
+
+    private static ArvoreBPlus arvoreBPlus;
+
     @Autowired
     private ArvoreRepository arvores;
 
@@ -60,7 +63,14 @@ public class ArvoresService{
     public ResponseEntity obterInformacoes(){
         LOG.info("Obtendo informaçoes gerais de carregamento e enviar ao cliente");
         if (terminouProcessAVL && terminouProcessBinario){
-            return ResponseEntity.ok(GerarDTO.dasInformacoesTotais(vetorBinario, arvoreSimplesControl.getArvore(), arvoreAVLControl.getArvore()));
+            return ResponseEntity.ok(
+                    GerarDTO.dasInformacoesTotais(vetorBinario,
+                    arvoreSimplesControl.getArvore(),
+                    arvoreAVLControl.getArvore(),
+                    arvoreB,
+                    arvoreBPlus
+                    )
+            );
         } else {
             return ResponseEntity.status(102).body("Ainda em processamento dos dados, por favor aguarde");
         }
@@ -79,6 +89,8 @@ public class ArvoresService{
             }
             new Thread(adicionarEmArvoreAVL).start();
             new Thread(adicionarEmArvoreSimples).start();
+            new Thread(adicionarEmArvoreB).start();
+            new Thread(adicionarEmArvoreBPlus).start();
             arvoreSimplesControl.getArvore().comparacoes = arvoreAVLControl.getArvore().comparacoes = vetorBinario.contadorComparacoesBinaria;
         }
     };
@@ -108,6 +120,37 @@ public class ArvoresService{
             terminouProcessBinario = true;
         }
     };
+
+    private static Runnable adicionarEmArvoreB = new Runnable() {
+        @Override
+        public void run() {
+            long start = System.nanoTime();
+            arvoreB = new ArvoreB(randomizeT());
+            for (String palavraNode : vetorBinario.vetorTratado){
+                arvoreB.inserir(palavraNode);
+            }
+            long stop = System.nanoTime();
+            arvoreB.tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
+        }
+    };
+
+    private static Runnable adicionarEmArvoreBPlus = new Runnable() {
+        @Override
+        public void run() {
+            long start = System.nanoTime();
+            arvoreBPlus = new ArvoreBPlus(randomizeT());
+            for (String palavraNode : vetorBinario.vetorTratado){
+                arvoreBPlus.inserir(palavraNode);
+            }
+            long stop = System.nanoTime();
+            arvoreBPlus.tempoDeExecucao = Tempo.formatarTempoEmString(stop - start);
+        }
+    };
+
+    private static int randomizeT(){
+        Random random = new Random();
+        return random.nextInt((10 - 2) + 1) + 2;
+    }
 
     /// PARA ARVORES RECURSIVAS
     public ResponseEntity arquivoLeituraTeste(MultipartFile arquivo) throws IOException {
